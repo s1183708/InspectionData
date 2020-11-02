@@ -1,0 +1,13 @@
+header{
+    background-color: lightblue;
+    padding: 10px 10px 10px 30px;
+    font-family: verdana;
+    font-size: 25px;
+}
+
+#logOut{
+   
+    margin: 0;
+    height: 30px;
+    float: right;
+}

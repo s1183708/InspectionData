@@ -1,0 +1,86 @@
+body{
+    margin: 0;
+    background-color: #AAAAAA;
+}
+
+.inspectiondata{
+    text-align: left;
+    margin-left: 20px;
+}
+
+.inspectiondata img{
+    width: 300px;
+}
+
+body, html{
+    height: 100%;
+}
+
+.column {
+    float: left;
+    width: 49%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .download {
+      margin-left: 2%;
+  }
+
+  button{
+      font-size: 15px;
+      font-family: verdana;
+  }
+
+  th {
+    cursor: pointer;
+}
+
+td {
+    width:33%;
+    border-bottom: 5px solid grey;
+}
+
+.app-title {
+    line-height:50px;
+    font-size:20px;
+    color: white;
+}
+
+thead {
+    background-color: grey;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+    border-left: 5px solid grey;
+    border-right: 5px solid grey;
+    background-color: white;
+    font-size: 15px;
+    font-family: verdana;
+}
+
+#content {
+    margin-left: 160px;
+}
+
+tbody > tr:hover{
+    background-color: #dedede;
+    cursor: pointer;
+}
+
+td > a:visited{
+    color: black;
+    text-decoration: none;
+}
+
+td > a{
+    display: block;
+}

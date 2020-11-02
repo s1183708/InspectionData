@@ -1,0 +1,64 @@
+body, html{
+    height: 100%;
+}
+
+.dataentry{
+    margin: 0 auto;
+    text-align: left;
+    width: 13%;
+    font-family: verdana;
+    font-size: 15px;
+}
+
+button{
+    font-family: verdana;
+    font-size: 15px;
+}
+
+.dataentry h1, .dataentry form{
+    margin-top: 10px;
+}
+
+h1{
+    text-align: center;
+}
+
+form{
+    margin: 0 auto;
+    text-align: center;
+}
+
+body{
+    margin: 0;
+    background-color: #efefef;
+}
+
+header{
+    background-color: lightblue;
+    font-family: verdana;
+    font-size: 1.5em;
+    border-bottom: 5px solid #06657D;
+}
+
+button{
+    margin-top: 10px;
+    background-color: lightblue;
+    border: 1px solid black;
+}
+
+#register{
+    float: left;
+}
+
+#login{
+    float: right;
+}
+
+input{
+    width: 100%;
+}
+
+input[type="text"]{
+    font-size: 15px;
+    font-family: verdana;
+}

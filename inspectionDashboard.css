@@ -1,0 +1,38 @@
+body{
+    margin: 0;
+    background-color: #AAAAAA;
+}
+
+.column{
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.listInfo{
+    overflow-y: auto;
+    height: 600px;
+    width: 250px;
+    margin: 0 auto;
+}
+
+.listInfo button {
+    width: 200px;
+    height: 100px;
+    background-color: lightblue;
+    border: none;
+    margin-top: 15px;
+}
+
+button{
+    width: 100px;
+    height: 50px;
+    background-color: lightblue;
+    border: none;
+    margin-top: 15px;
+}

@@ -1,0 +1,230 @@
+body{
+    margin: 0;
+    background-color: #efefef;
+    text-align: left;
+    height: 100vh;
+    font-size: 15px;
+    font-family: verdana;
+}
+
+.navbar{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+}
+
+ul{
+    list-style-type: none;
+    padding-left: 10px;
+    text-align: left;
+}
+
+header{
+    background-color: lightblue;
+    margin-left: 160px;
+    border-bottom: 5px solid #06657D;
+}
+
+nav{
+    height: 100%;
+    width: 155px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: lightblue;
+    overflow-x: hidden;
+    color: black;
+    overflow: hidden;
+    margin: 0;
+    font-size: 18px;
+    font-family: verdana;
+    border-right: 5px solid #06657D;
+}
+
+footer{
+    clear: both;
+    text-align: center;
+    font-size: 16px;
+    background-color: #0074C2;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px;
+    margin-left: 160px;
+}
+
+#appUsers, #observations, #investigations, #userInfo, #addUser, #observationsInfo{
+    display: none;
+}
+
+html {
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+main {
+    position: relative;
+    padding-top: 55px;
+}
+
+/* Ensure display:flex and others don't override a [hidden] */
+[hidden] { display: none !important; }
+
+
+th {
+    cursor: pointer;
+    font-size: 17px;
+}
+
+td {
+    width:33%;
+    border-bottom: 5px solid #AAAAAA;
+}
+
+.app-title {
+    line-height:50px;
+    font-size:20px;
+    color: white;
+}
+
+thead {
+    background-color: #AAAAAA;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+    border-left: 5px solid #AAAAAA;
+    border-right: 5px solid #AAAAAA;
+    background-color: white;
+    font-size: 15px;
+    font-family: verdana;
+}
+
+#content {
+    margin-left: 160px;
+}
+
+tbody > tr:hover{
+    background-color: #dedede;
+    cursor: pointer;
+}
+
+.navbar:hover{
+    cursor: pointer;
+}
+
+.navbar li:hover{
+    background-color: #0DCCFC;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.divTitle{
+    text-align: left;
+    margin: 0 0 0 3%;
+    font-size: 30px;
+    font-family: verdana;
+}
+
+.filter{
+    text-align: left;
+    margin-left: 4%;
+    font-size: 15px;
+    font-family: verdana;
+    margin-top: 1%;
+}
+
+.newUser{
+    float: right;
+    margin-right: 4%;
+}
+
+#logOut{
+    font-size: 15px;
+    font-family: verdana;
+    border: 1px solid black;
+}
+
+li {
+    margin-bottom: 5px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+div button{
+    font-size: 15px;
+    font-family: verdana;
+    border: 1px solid black;
+    background-color: lightblue;
+}
+
+#addUser input{
+    width: 100%;
+}
+
+#addUserInfo{
+    width: 25%;
+    margin: 0 auto;
+}
+
+#addUser form button{
+    margin-bottom: 5px;
+}
+
+.back{
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+}
+
+input[type="text"]{
+    font-size: 15px;
+    font-family: verdana;;
+}
+
+#userInfo input[type="text"]{
+    width: 100%
+}
+
+#changeableInfo{
+    width: 25%;
+    margin: 0 auto !important;
+}
+
+.column {
+    float: left;
+    width: 49%;
+  }
+  
+  /* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.download {
+    margin-left: 2%;
+    text-align: center;
+}
+td > a:visited{
+    color: black;
+    text-decoration: none;
+}
+
+#observationsInfo table{
+    width: 30%;
+}
+
+#observationsInfo h2{
+    margin: 10px 0 10px 1%;
+}

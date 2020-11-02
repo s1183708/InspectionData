@@ -1,0 +1,10 @@
+body{
+    margin: 0;
+    background-color: #AAAAAA;
+}
+
+form{
+    margin-top: 30px;
+    text-align: center;
+    font-size: 30px;
+}

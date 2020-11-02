@@ -1,0 +1,53 @@
+body{
+    margin: 0;
+    background-color: #efefef;
+    font-size: 15px;
+    font-family: verdana;
+}
+
+#AppUserInfo, #AdministrationInfo{
+    display: none;
+    text-align: left;
+    margin: 0 auto;
+    width: 25%;
+}
+
+div.registrationChoice{
+    margin-top: 10px;
+    text-align: center;
+}
+
+select {
+    margin-bottom: 0;
+}
+
+input{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+span, input, select,button{
+    font-size: 15px;
+    font-family: verdana;
+}
+
+label{
+    font-size: 22px;
+}
+header{
+    border-bottom: 5px solid #06657D;
+}
+
+button{
+    background-color: lightblue;
+    border: 1px solid black;
+}
+
+#help{
+    margin-bottom: 3px;
+    margin-top: 20px;
+}
+
+h2 {
+    margin: 20px 0 10px 0;
+}

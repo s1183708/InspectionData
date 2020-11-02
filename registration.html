@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="header.css">
+    <title>Inspection Data Web Portal - Registration</title>
+</head>
+<body>
+    <header>
+        Registration
+    </header>
+    
+    <div class="registrationChoice">
+        <label>What type of User are you?</label>
+        <select id="usertype" onchange="checkUser()">
+            <option disabled selected> Select an option</option>
+            <option value="App User">App User</option>
+            <option value="Administrator">Administrator</option>
+        </select>
+        <button onclick="userChoiceHelp()">?</button>
+    </div>
+
+    <div id="AppUserInfo">
+        <span>Username: </span><button id="help" onclick="appUserHelp()">?</button><input type="text">
+        <br>
+        <span>Password: </span><input type="text">
+        <br>
+        <span>Confirm Password: </span><input type="text">
+        <br>
+        <span>Email: </span><input type="text">
+        <br>
+        <a href="index.html"><button>Sign Up</button></a>
+    </div>
+
+    <div id="AdministrationInfo">
+        <h2>Account Information</h2>
+        <span>Username: </span><input type="text">
+        <br>
+        <span>Password: </span><input type="text">
+        <br>
+        <span>Confirm Password: </span><input type="text">
+        <br>
+        <span>Email: </span><input type="text">
+        <br>
+        <h2>Company Information</h2>
+        <span>Company name: </span><input type="text">
+        <br>
+        <span>Company contact email: </span><input type="text">
+        <br>
+        <span>Company contact phone number: </span><input type="text">
+        <br>
+        <a href="index.html"><button>Sign Up</button></a>
+    </div>
+
+    <script>
+       
+        function checkUser(){
+            var userType = document.getElementById("usertype").value;
+            if(userType=="App User"){
+                document.getElementById("AppUserInfo").style.display = "block";
+                document.getElementById("AdministrationInfo").style.display = "none";
+            } else if(userType=="Administrator"){
+                document.getElementById("AdministrationInfo").style.display = "block";
+                document.getElementById("AppUserInfo").style.display = "none";
+            }
+        }
+        function adminHelp(){
+            alert("Only fill this out if you are representing a company")
+        }
+        function appUserHelp(){
+            alert("A username should have been provided to you already by an administrator. Use that username when registering.")
+        }
+        function userChoiceHelp(){
+            alert("App User: You complete inspection data surveys.\nAdministrator: You are setting up an account for a company.")
+        }
+    </script>
+</body>
+</html>

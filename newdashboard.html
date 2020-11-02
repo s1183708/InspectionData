@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="newdashboard.css" rel="stylesheet"/>
+    <link href="header.css" rel="stylesheet"/>
+    <title>Inspection Data Web Portal</title>
+</head>
+<body>
+    <header>
+        <span id="headerText">Dashboard</span>
+        <a href="index.html"><button id="logOut">Log Out</button></a>
+    </header>
+    <nav>
+        <ul class="navbar">
+            <li onclick="showUsers()">App Users</li>
+            <li onclick="showstuff()">Inspections</li>
+            <ul id="moreinfo" style="display:none;">
+                <li onclick="showObs()">Observations</li>
+                <li onclick="showInv()">Investigations</li>
+            </ul>
+        </ul>
+    </nav>
+    <div id="content">
+        <div id="appUsers">
+                <div class="filter">
+                    <label>Filter: </label><input type="text"/>
+                    <a class="newUser"onclick="showAddUser()"><button>Add New User</button></a>
+                </div>
+                    
+            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Inspections Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="showUserInfo()">
+                        <td>ZMASTORIO</td>
+                        <td>Zakary Mastorio</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>KLAS</td>
+                        <td>Raman Lakshmanan</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>CJAMES</td>
+                        <td>Charles James</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>JCAPORASO</td>
+                        <td>John Caporaso</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="userInfo">
+            <button class="back" onclick="showUsers()">Back</button>
+            <div id="changeableInfo" style="margin: 10px 0 0 10px;">
+                <label>Full Name: </label><input type="text" value="Zakary Mastorio">
+                <br>
+                <label>Username: </label><input type="text" value="ZMASTORIO">
+                <br>
+                <form>
+                    <span>Status: </span>
+                    <input type="radio" name="Status" value="Enabled" checked>
+                    <label for="Enabled">Enabled</label>
+                    <input type="radio" name="Status" value="Disabled">
+                    <label for="Disabled">Disabled</label>
+                </form>
+                <button>Save Changes</button>
+            </div>
+            <p style="margin-left: 10px;">Completed Inspections: </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Site ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2020-10-15</td>
+                        <td>Investigation</td>
+                        <td>123456</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="addUser">
+            <button class="back" onclick="showUsers()">Back</button>
+            <div id="addUserInfo">
+                <form>
+                    <span>Create a username for the new app user: </span> <button type="button" onclick="addUserHelp()">?</button>
+                    <input type="text">
+                    <br>
+                    <button type="button" onclick="showUsers()">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div id="inspections">
+            <div id="observations">
+                <div class="filter">
+                    <label>Filter: </label><input type="text"/>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Site ID</th>
+                        </tr>
+                    </thead>
+                    <tr onclick="showObsInfo()"> <!--"window.location='./ViewInspection.html'"-->
+                        <td>2020-10-01</td>
+                        <td>CJAMES</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-09-21</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-09-16</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-12</td>
+                        <td>KLAS</td>
+                        <td>214719</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="observationsInfo">
+                <div class="inspectiondata">
+                    <button class="back" onclick="showUsers()">Back</button>
+                    <div class="row">
+                        <div class="column">
+                   <textarea style="width: 100%;height:75vh; margin-left: 1%;">
+<observationFormGroup>
+    <observationForms>
+        <observationFormInstance userid="KLAS" siteid="214719">
+        <firstSurveyDate>2020-08-12T17:05:54.000-04:00</firstSurveyDate>
+        <secondSurveyDate>2020-08-12T17:05:54.000-04:00</secondSurveyDate>
+        <facilityType>Office Suite-Mall</facilityType>
+        <isOpen>true</isOpen>
+        <hasStaff>false</hasStaff>
+        <hasCustomers>true</hasCustomers>
+        <hasSign>true</hasSign>
+        <hoursOfOperation>7 to 7 </hoursOfOperation>
+        <hasInventory>true</hasInventory>
+        <isOperational>true</isOperational>
+        <additionalComments>Demo to Dave</additionalComments>
+        <executedDate>2020-08-12-04:00</executedDate>
+        </observationFormInstance>
+    </observationForms>
+</observationFormGroup>
+                       </textarea>
+             </div>
+             <div class="column download">
+                   <p>All documents associated with this inspection:</p>
+                   <table>
+                       <thead>
+                           <th>File Size</th>
+                           <th>File Type</th>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_8E648237-9378-4949-B901-EE8C59909AE1.jpeg" target="_blank">797KB</a></td>
+                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_8E648237-9378-4949-B901-EE8C59909AE1.jpeg" target="_blank">JPEG</a></td>
+                           </tr>
+                           <tr>
+                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_ack-F29FDAF5-A7F8-43C3-94C6-CD746197A43F.pdf" download>172KB</a></td>
+                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_ack-F29FDAF5-A7F8-43C3-94C6-CD746197A43F.pdf" download>PDF</a></td>
+                           </tr>
+                       </tbody>
+                   </table>
+             </div>
+           </div> 
+            </div>
+        </div>
+            <div id="investigations">
+                <div class="filter">
+                    <label>Filter: </label><input type="text"/>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Site ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2020-10-15</td>
+                            <td>ZMASTORIO</td>
+                            <td>123456</td>
+                        </tr>
+                        <tr>
+                            <td>2020-10-04</td>
+                            <td>KLAS</td>
+                            <td>716458</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        let isVis = false;
+        moreInfo = document.getElementById("moreinfo");
+        users = document.getElementById("appUsers");
+        obs = document.getElementById("observations");
+        inv = document.getElementById("investigations");
+        userInfo = document.getElementById("userInfo");
+        addUser = document.getElementById("addUser");
+        obsInfo = document.getElementById("observationsInfo");
+        headerText = document.getElementById("headerText");
+        
+        function showstuff(){
+            if(!isVis){
+                moreInfo.style.display="block";
+            } else {
+                moreInfo.style.display="none";
+            }
+            isVis = !isVis;
+        }
+
+        function showUsers(){
+            users.style.display = "block";
+            obs.style.display = "none";
+            inv.style.display = "none";
+            userInfo.style.display="none";
+            addUser.style.display="none";
+            obsInfo.style.display="none";
+            changeHeader("App Users");
+        }
+        
+        function showObs(){
+            users.style.display = "none";
+            obs.style.display = "block";
+            inv.style.display = "none";
+            userInfo.style.display="none";
+            addUser.style.display="none";
+            obsInfo.style.display="none";
+            changeHeader("Observations");
+        }
+        
+        function showInv(){
+            users.style.display = "none";
+            obs.style.display = "none";
+            inv.style.display = "block";
+            userInfo.style.display="none";
+            addUser.style.display="none";
+            obsInfo.style.display="none";
+            changeHeader("Investigations");
+        }
+
+        function showUserInfo(){
+            userInfo.style.display="block";
+            users.style.display="none";
+            changeHeader("App User Information");
+        }
+
+        function showAddUser(){
+            addUser.style.display="block";
+            users.style.display="none";
+            changeHeader("Add New App User");
+        }
+
+        function showObsInfo(){
+            obsInfo.style.display="block";
+            obs.style.display = "none";
+            changeHeader("Observation Information");
+        }
+
+        function addUserHelp(){
+            alert("Give the user this username. When they register for the web portal they will use this username.");
+        }
+
+        function changeHeader(words){
+            headerText.innerHTML=words;
+        }
+    </script>
+</body>
+</html>
