@@ -1,0 +1,80 @@
+{
+  "companies" : {
+    "MUinspections" : {
+      "contact_email" : "noahp@gmail.com",
+      "contact_user" : "V6F2nX3HyWNEsTinYzsdMtXv4BE3",
+      "name" : "MUinspection"
+    },
+    "companyA" : {
+      "contact_email" : "johnc@gmail.com",
+      "contact_user" : "YCUMJTN8T9SfNfSW6iKqpYZ6GR53",
+      "name" : "companyA",
+      "users" : {
+        "xcW6bqbwn1aS1bYq0M61ddhhJDu2" : "charlesj@gmail.com",
+        "yeOwEcTERERXH7qWUvuUd7UCG5O2" : "zakm@gmail.com"
+      }
+    }
+  },
+  "inspectionTypes" : {
+    "action" : "action_inspection",
+    "full" : "full_inspection",
+    "observation" : "observation_inspection"
+  },
+  "inspections" : {
+    "companyA" : {
+      "xcW6bqbwn1aS1bYq0M61ddhhJDu2" : {
+        "20201029165805" : {
+          "inspection_data" : "<XML>ABC<ActionData>data</ActionData>",
+          "inspection_date" : "10/20/2020 4:58:05 pm",
+          "inspection_type" : "action"
+        },
+        "20201029180000" : {
+          "inspection_data" : "<XML><OBSERVATION>data<OBSERVATION>",
+          "inspection_date" : "10/29/2020 6:00:00 pm",
+          "inspection_type" : "observation"
+        }
+      },
+      "yeOwEcTERERXH7qWUvuUd7UCG5O2" : {
+        "20201030090000" : {
+          "inspection_data" : "<XML><FULL>data<FULL>",
+          "inspection_date" : "10/30/2020 9:00:00 am",
+          "inspection_type" : "Full"
+        }
+      }
+    },
+    "MUinspections" : {
+      "V6F2nX3HyWNEsTinYzsdMtXv4BE3" : {
+        "20201005083005" : {
+          "inspection_data" : "https://apps.csse-projects.monmouth.edu/posts/investigations/2020-11-05T01-10-03.xml",
+          "inspection_date" : "10/05/2020 8:30:05 am",
+          "inspection_type" : "Full"
+        }
+      }
+    }
+  },
+  "users" : {
+    "V6F2nX3HyWNEsTinYzsdMtXv4BE3" : {
+      "company" : "MUinspections",
+      "user_level" : "inspector"
+    },
+    "DSFKJLKDSFJVNKLSDRJNFVKDSJNL" :{
+      "company" : "MUinspections",
+      "user_level" : "admin"
+    },
+    "VsbuyuZdMkfkdqbQkeSocZQ31P52" : {
+      "user_level" : "system_admin"
+    },
+    "YCUMJTN8T9SfNfSW6iKqpYZ6GR53" : {
+      "company" : "companyA",
+      "user_level" : "admin"
+    },
+    "xcW6bqbwn1aS1bYq0M61ddhhJDu2" : {
+      "company" : "companyA",
+      "user_level" : "inspector"
+    },
+    "yeOwEcTERERXH7qWUvuUd7UCG5O2" : {
+      "company" : "companyA",
+      "user_level" : "inspector"
+    }
+  }
+}

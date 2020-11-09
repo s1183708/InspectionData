@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="dashboard.css" rel="stylesheet"/>
-    <link href="header.css" rel="stylesheet"/>
+    <link href="dashboard.component.css" rel="stylesheet"/>
     <title>Inspection Data Web Portal</title>
 </head>
 <body>
     <header>
-        <span id="headerText">Dashboard</span>
-        <a href="index.html"><button id="logOut">Log Out</button></a>
+        <span id="headerText" #headerText>Dashboard</span>
+        <a routerLink="/login" routerLinkActive="active"><button id="logOut">Log Out</button></a>
     </header>
     <nav>
         <ul class="navbar">
-            <li onclick="showUsers()">App Users</li>
-            <li onclick="showstuff()">Inspections</li>
-            <ul id="moreinfo" style="display:none;">
-                <li onclick="showObs()">Observations</li>
-                <li onclick="showInv()">Investigations</li>
+            <li (click)="showUsers()">App Users</li>
+            <li (click)="showstuff()">Inspections</li>
+            <ul id="moreinfo" #moreinfo style="display:none;">
+                <li (click)="showObs()">Observations</li>
+                <li (click)="showInv()">Investigations</li>
+                <!-- <li *ngFor="let type of allInspectionTypes | keyvalue">{{ type.key | titlecase }}</li> -->
             </ul>
         </ul>
     </nav>
     <div id="content">
-        <div id="appUsers">
+        <div id="appUsers" #appUsers>
                 <div class="filter">
                     <label>Filter: </label><input type="text"/>
-                    <a class="newUser"onclick="showAddUser()"><button>Add New User</button></a>
+                    <a class="newUser"(click)="showAddUser()"><button>Add New User</button></a>
                 </div>
                     
             
@@ -37,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr onclick="showUserInfo()">
+                    <tr (click)="showUserInfo()">
                         <td>ZMASTORIO</td>
                         <td>Zakary Mastorio</td>
                         <td>1</td>
@@ -60,8 +60,8 @@
                 </tbody>
             </table>
         </div>
-        <div id="userInfo">
-            <button class="back" onclick="showUsers()">Back</button>
+        <div id="userInfo" #userInfo>
+            <button class="back" (click)="showUsers()">Back</button>
             <div id="changeableInfo" style="margin: 10px 0 0 10px;">
                 <label>Full Name: </label><input type="text" value="Zakary Mastorio">
                 <br>
@@ -94,19 +94,19 @@
                 </tbody>
             </table>
         </div>
-        <div id="addUser">
-            <button class="back" onclick="showUsers()">Back</button>
+        <div id="addUser" #addUser>
+            <button class="back" (click)="showUsers()">Back</button>
             <div id="addUserInfo">
                 <form>
-                    <span>Create a username for the new app user: </span> <button type="button" onclick="addUserHelp()">?</button>
+                    <span>Create a username for the new app user: </span> <button type="button" (click)="addUserHelp()">?</button>
                     <input type="text">
                     <br>
-                    <button type="button" onclick="showUsers()">Submit</button>
+                    <button type="button" (click)="showUsers()">Submit</button>
                 </form>
             </div>
         </div>
         <div id="inspections">
-            <div id="observations">
+            <div id="observations" #observations>
                 <div class="filter">
                     <label>Filter: </label><input type="text"/>
                 </div>
@@ -118,7 +118,12 @@
                             <th>Site ID</th>
                         </tr>
                     </thead>
-                    <tr onclick="showObsInfo()"> <!--"window.location='./ViewInspection.html'"-->
+                    <tr *ngFor="let inspection of allUserInspections | keyvalue">
+                        <td>{{inspection.value.inspection_date}}</td>
+                        <td>{{inspection.value.inspector}}</td>
+                        <td>{{inspection.value.inspection_type}}</td>
+                    </tr>
+                    <tr (click)="showObsInfo()"> <!--"window.location='./ViewInspection.html'"-->
                         <td>2020-10-01</td>
                         <td>CJAMES</td>
                         <td>214719</td>
@@ -270,9 +275,9 @@
                     </tr>
                 </table>
             </div>
-            <div id="observationsInfo">
+            <div id="observationsInfo" #observationsInfo>
                 <div class="inspectiondata">
-                    <button class="back" onclick="showUsers()">Back</button>
+                    <button class="back" (click)="showUsers()">Back</button>
                     <div class="row">
                         <div class="column">
                    <textarea style="width: 100%;height:75vh; margin-left: 1%;">
@@ -318,7 +323,7 @@
            </div> 
             </div>
         </div>
-            <div id="investigations">
+            <div id="investigations" #investigations>
                 <div class="filter">
                     <label>Filter: </label><input type="text"/>
                 </div>
@@ -346,81 +351,5 @@
             </div>
         </div>
     </div>
-    <script>
-        let isVis = false;
-        moreInfo = document.getElementById("moreinfo");
-        users = document.getElementById("appUsers");
-        obs = document.getElementById("observations");
-        inv = document.getElementById("investigations");
-        userInfo = document.getElementById("userInfo");
-        addUser = document.getElementById("addUser");
-        obsInfo = document.getElementById("observationsInfo");
-        headerText = document.getElementById("headerText");
-        
-        function showstuff(){
-            if(!isVis){
-                moreInfo.style.display="block";
-            } else {
-                moreInfo.style.display="none";
-            }
-            isVis = !isVis;
-        }
-
-        function showUsers(){
-            users.style.display = "block";
-            obs.style.display = "none";
-            inv.style.display = "none";
-            userInfo.style.display="none";
-            addUser.style.display="none";
-            obsInfo.style.display="none";
-            changeHeader("App Users");
-        }
-        
-        function showObs(){
-            users.style.display = "none";
-            obs.style.display = "block";
-            inv.style.display = "none";
-            userInfo.style.display="none";
-            addUser.style.display="none";
-            obsInfo.style.display="none";
-            changeHeader("Observations");
-        }
-        
-        function showInv(){
-            users.style.display = "none";
-            obs.style.display = "none";
-            inv.style.display = "block";
-            userInfo.style.display="none";
-            addUser.style.display="none";
-            obsInfo.style.display="none";
-            changeHeader("Investigations");
-        }
-
-        function showUserInfo(){
-            userInfo.style.display="block";
-            users.style.display="none";
-            changeHeader("App User Information");
-        }
-
-        function showAddUser(){
-            addUser.style.display="block";
-            users.style.display="none";
-            changeHeader("Add New App User");
-        }
-
-        function showObsInfo(){
-            obsInfo.style.display="block";
-            obs.style.display = "none";
-            changeHeader("Observation Information");
-        }
-
-        function addUserHelp(){
-            alert("Give the user this username. When they register for the web portal they will use this username.");
-        }
-
-        function changeHeader(words){
-            headerText.innerHTML=words;
-        }
-    </script>
 </body>
 </html>

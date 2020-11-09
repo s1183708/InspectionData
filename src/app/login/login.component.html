@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inspection Data Web Portal - Log In</title>
+</head>
+<body>
+    <header>
+        Sign In
+    </header>
+    <div class="dataentry">
+        <h1>User Log In</h1>
+        <form>
+            <span>Username: </span>
+            <input type="text" [(ngModel)]="username" name="username"/>
+        </form>
+        <br />
+        <form>
+            <span>Password: </span>
+            <input type="text">
+        </form>
+        <br>
+        <a routerLink="/registration" routerLinkActive="active"><button id="register">Register</button></a>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="sendUsername()"><button id="login">Log In</button></a>
+    </div>
+</body>
+</html>
