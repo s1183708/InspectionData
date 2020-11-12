@@ -228,3 +228,8 @@ td > a:visited{
 #observationsInfo h2{
     margin: 10px 0 10px 1%;
 }
+
+.inspectionlist:hover{
+    background-color: #dedede;
+    cursor: pointer;
+}

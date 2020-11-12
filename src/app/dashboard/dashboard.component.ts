@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   allInspectionTypes: any
   currentUser: String
   allUserInspections: Object
+  isAdministrator: any = false
 
   constructor(private dataservice: DataService, public router: Router, public route: ActivatedRoute) {}
 
@@ -35,15 +36,38 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.dataservice.getInspections().subscribe((data) => {
       this.allCompanies = data["companies"]
       this.allUsers = data["users"]
+      let currentCompany = data["users"][this.currentUser]["company"]
       this.allInspections = data["inspections"]
-      this.allInspectionTypes = data["inspectionTypes"]
+      if(currentCompany == null){
+        this.allInspectionTypes = this.getAllCompanyInspectionTypes()
+      } else {
+        this.allInspectionTypes = data["companies"][currentCompany]["inspectionTypes"]
+        console.log(this.allInspectionTypes)
+      }
+      if(this.allUsers[this.currentUser]["user_level"] == "admin" || this.allUsers[this.currentUser]["user_level"] == "system_admin"){
+        this.isAdministrator = true
+      }
       console.log(this.allUsers)
-      this.search()
     })
   }
 
   ngAfterViewInit(): void {
   
+  }
+
+  getAllCompanyInspectionTypes(){
+    let allCompanyKeys = Object.keys(this.allCompanies)
+    let allTypes = []
+
+    for(let i =0; i < allCompanyKeys.length; i++){
+      let allCompanyTypes = Object.keys(this.allCompanies[allCompanyKeys[i]]["inspectionTypes"])
+      console.log(allCompanyTypes)
+      for(let j = 0; j < allCompanyTypes.length; j++){
+        allTypes[allCompanyTypes[j]] = this.allCompanies[allCompanyKeys[i]]["inspectionTypes"][allCompanyTypes[j]]
+      }
+    }
+    console.log(allTypes)
+    return allTypes
   }
 
   isVis = false;
@@ -112,65 +136,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.headerText.nativeElement.innerHTML=words;
   }
 
-  search(){
-    let specificUserKey = ""
-    let allUserKeys = Object.keys(this.allUsers)
-
-    for(let i = 0; i < allUserKeys.length; i++){
-      console.log(allUserKeys[i])
-      if(allUserKeys[i] == this.currentUser){
-        alert("found user")
-        specificUserKey=allUserKeys[i]
-        break
-      }
-    }
-    
-    if(this.allUsers[specificUserKey]["user_level"] == "inspector"){
-      this.listAllUserInspections(specificUserKey)
-    } else if(this.allUsers[specificUserKey]["user_level"] == "admin"){
-      this.listAllCompanyInspections(this.allUsers[specificUserKey]["company"])
-    } else if (this.allUsers[specificUserKey]["user_level"] == "system_admin"){
-      this.listAllSystemInspections()
-    }
-  }
-
-  listAllUserInspections(specificUserKey){
+  listAllUserInspections(specificUserKey, specificCompanyKey, inspectionType){
     let allInspectionCompanyKeys = Object.keys(this.allInspections)
-    let specificCompanyKey = ""
     this.allUserInspections = []
     let count = 0
     console.log("before all inspection")
     console.log(allInspectionCompanyKeys.length)
-    for(let i =0; allInspectionCompanyKeys.length; i++){
-      if(allInspectionCompanyKeys[i] == this.allUsers[specificUserKey]["company"]){
-        specificCompanyKey = allInspectionCompanyKeys[i]
-        console.log(specificCompanyKey)
-        let userinspecsvalues = Object.values(this.allInspections[specificCompanyKey][specificUserKey])
-        console.log(userinspecsvalues)
-        for(let j = 0; j < userinspecsvalues.length; j++){
-          let userobj = userinspecsvalues[j]
-          console.log(userobj)
-          userobj["inspector"] = specificUserKey
-          this.allInspections[count] = userobj
-          count = count + 1
-        }
-        break;
+    let userinspections = Object.values(this.allInspections[specificCompanyKey][specificUserKey])
+    
+    for(let i = 0; i < userinspections.length; i++){
+      if(userinspections[i]["inspection_type"].toLowerCase() == inspectionType["key"].toLowerCase()){
+        let userobj = userinspections[i]
+        console.log("in here")
+        userobj["inspector"] = specificUserKey
+        this.allUserInspections[count] = userobj
+        count = count + 1
       }
-    } //End fors
-    console.log("after all inspection and before specific company inspections")
-    let allCompanyInspectionsKeys = Object.keys(this.allInspections[specificCompanyKey])
-    let allCompanyInspections = this.allInspections[specificCompanyKey]
-      for(let i =0; i < allCompanyInspectionsKeys.length; i++){
-        if(allCompanyInspectionsKeys[i] == specificUserKey){
-          this.allUserInspections = allCompanyInspections[specificUserKey]
-          console.log(this.allUserInspections)
-          break;
-        }
-      }
+    }
     console.log(this.allUserInspections)
   }
 
-  listAllCompanyInspections(specificCompanyKey){
+  listAllCompanyInspections(specificCompanyKey, inspectionType){
     console.log("tehy are company admin")
     let allCompanyInspections = this.allInspections[specificCompanyKey]
     let allCompanyUserKeys = Object.keys(this.allInspections[specificCompanyKey])
@@ -186,18 +172,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         //console.log("Key: " + allCompanyUserKeys[i] + ", Value: " + userinspecvalues[j])
         // console.log(allCompanyUserKeys[i])
         // console.log(userinspecvalues[j])
-        let userobj = userinspecvalues[j]
-        userobj["inspector"] = allCompanyUserKeys[i]
-        console.log(userobj)
-        this.allUserInspections[count] = userobj
-        count = count+1
+        if(this.allInspections[specificCompanyKey][allCompanyUserKeys[i]][userinspeckeys[j]]["inspection_type"].toLowerCase() == inspectionType["key"].toLowerCase()){
+          let userobj = userinspecvalues[j]
+          userobj["inspector"] = allCompanyUserKeys[i]
+          console.log(userobj)
+          this.allUserInspections[count] = userobj
+          count = count+1
+        }
       }
       
     }
     console.log(this.allUserInspections)
   }
 
-  listAllSystemInspections(){
+  listAllSystemInspections(inspectionType){
     console.log("tehy are system admin")
     let count = 0
     this.allUserInspections = []
@@ -211,14 +199,40 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           let userinspectionvalues = Object.values(this.allInspections[allCompanyInspectionsKeys[i]][companyuserkeys[j]])
           console.log(userinspectionkeys)
           for(let k = 0; k < userinspectionkeys.length; k++){
-            // console.log(userinspectionvalues[k])
-            let userobj = userinspectionvalues[k]
-            userobj['inspector'] = companyuserkeys[j]
-            console.log(userobj)
-            this.allUserInspections[count] = userobj
-            count = count + 1
+            if(this.allInspections[allCompanyInspectionsKeys[i]][companyuserkeys[j]][userinspectionkeys[k]]["inspection_type"].toLowerCase() == inspectionType["key"].toLowerCase()){
+              let userobj = userinspectionvalues[k]
+              userobj['inspector'] = companyuserkeys[j]
+              console.log(userobj)
+              this.allUserInspections[count] = userobj
+              count = count + 1
+            }
           }
       }
     }
   }
-}
+
+  showInspections(inspectionType){
+    console.log(inspectionType)
+    let specificUserKey = ""
+    let allUserKeys = Object.keys(this.allUsers)
+    let specificCompanyKey = ""
+
+    for(let i = 0; i < allUserKeys.length; i++){
+      console.log(allUserKeys[i])
+      if(allUserKeys[i] == this.currentUser){
+        specificUserKey=allUserKeys[i]
+        specificCompanyKey=this.allUsers[specificUserKey]["company"]
+        break
+      }
+    }
+    
+    if(this.allUsers[specificUserKey]["user_level"] == "inspector"){
+      this.listAllUserInspections(specificUserKey, specificCompanyKey, inspectionType)
+    } else if(this.allUsers[specificUserKey]["user_level"] == "admin"){
+      this.listAllCompanyInspections(this.allUsers[specificUserKey]["company"], inspectionType)
+    } else if (this.allUsers[specificUserKey]["user_level"] == "system_admin"){
+      this.listAllSystemInspections(inspectionType)
+    }
+    this.changeHeader(inspectionType["key"][0].toUpperCase() + inspectionType["key"].substr(1).toLowerCase())
+  }
+} //end whole thing

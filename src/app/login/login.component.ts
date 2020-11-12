@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
   }
 
   sendUsername(){
-    
     this.router.navigate(["/dashboard", {'username': this.username}])
   }
 
