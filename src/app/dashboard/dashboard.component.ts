@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DataService } from '../core/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import { isEmptyExpression } from '@angular/compiler';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +19,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild("observationsInfo") obsInfo: ElementRef
   @ViewChild("headerText") headerText: ElementRef
   @ViewChild("userInfo") userInfo: ElementRef
+  @ViewChild("inspections") inspectionsDiv: ElementRef
 
   allCompanies: any
   allUsers: any = {"test": "teeeeeeeeest"}
@@ -24,15 +28,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   currentUser: String
   allUserInspections: Object
   isAdministrator: any = false
+  allAppUsers: Object
+  fireuser: Object
+  isSignedIn: any = true
 
   constructor(private dataservice: DataService, public router: Router, public route: ActivatedRoute) {}
 
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.currentUser= params['username']
-      console.log(this.currentUser)
-  });
+    this.fireuser = firebase.auth().currentUser
+
+    firebase.auth().onAuthStateChanged(function(user){
+      if(!this.isSignedIn && user){
+        console.log("logged in")
+        console.log(user.uid)
+        this.fireuser = user
+        this.isSignedIn = true
+        alert("USER HAS LOGGED IN\n"+"email: " + user.email + "\nUser ID: " + user.uid)
+      }
+    })
+
+
+    // *************************************************** //
+    // CURRENT USER HARDCODED FOR TESTING PURPOSES FOR NOW //
+    // zmastorio99@gmail.com PowerOfSparda
+    //  wetdoghair2018@gmail.com password123
+    // *************************************************** //
+    this.currentUser = "YCUMJTN8T9SfNfSW6iKqpYZ6GR53" //TESTING, CHANGE BACK LATER
     this.dataservice.getInspections().subscribe((data) => {
       this.allCompanies = data["companies"]
       this.allUsers = data["users"]
@@ -44,7 +66,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.allInspectionTypes = data["companies"][currentCompany]["inspectionTypes"]
         console.log(this.allInspectionTypes)
       }
-      if(this.allUsers[this.currentUser]["user_level"] == "admin" || this.allUsers[this.currentUser]["user_level"] == "system_admin"){
+      let userKey = ""
+      for(let i = 0; i < Object.keys(this.allUsers).length; i++){
+        if(this.currentUser == Object.keys(this.allUsers)[i]){
+          userKey = Object.keys(this.allUsers)[i]
+        }
+      }
+      if(this.allUsers[userKey]["user_level"] == "admin" || this.allUsers[userKey]["user_level"] == "system_admin"){
         this.isAdministrator = true
       }
       console.log(this.allUsers)
@@ -78,54 +106,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.moreInfo.nativeElement.style.display = "none";
       }
       this.isVis = !this.isVis;
-  }
-
-  showUsers(){
-      this.users.nativeElement.style.display = "block";
-      this.obs.nativeElement.style.display = "none";
-      this.inv.nativeElement.style.display = "none";
-      this.userInfo.nativeElement.style.display="none";
-      this.addUser.nativeElement.style.display="none";
-      this.obsInfo.nativeElement.style.display="none";
-      this.changeHeader("App Users");
-  }
-  
-  showObs(){
-      this.users.nativeElement.style.display = "none";
-      this.obs.nativeElement.style.display = "block";
-      this.inv.nativeElement.style.display = "none";
-      this.userInfo.nativeElement.style.display="none";
-      this.addUser.nativeElement.style.display="none";
-      this.obsInfo.nativeElement.style.display="none";
-      this.changeHeader("Observations");
-  }
-  
-  showInv(){
-      this.users.nativeElement.style.display = "none";
-      this.obs.nativeElement.style.display = "none";
-      this.inv.nativeElement.style.display = "block";
-      this.userInfo.nativeElement.style.display="none";
-      this.addUser.nativeElement.style.display="none";
-      this.obsInfo.nativeElement.style.display="none";
-      this.changeHeader("Investigations");
-  }
-
-  showUserInfo(){
-      this.userInfo.nativeElement.style.display="block";
-      this.users.nativeElement.style.display="none";
-      this.changeHeader("App User Information");
-  }
-
-  showAddUser(){
-      this.addUser.nativeElement.style.display="block";
-      this.users.nativeElement.style.display="none";
-      this.changeHeader("Add New App User");
-  }
-
-  showObsInfo(){
-      this.obsInfo.nativeElement.style.display="block";
-      this.obs.nativeElement.style.display = "none";
-      this.changeHeader("Observation Information");
   }
 
   addUserHelp(){
@@ -213,9 +193,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   showInspections(inspectionType){
     console.log(inspectionType)
+    this.inspectionsDiv.nativeElement.style.display = "block"
+    this.users.nativeElement.style.display = "none"
     let specificUserKey = ""
     let allUserKeys = Object.keys(this.allUsers)
     let specificCompanyKey = ""
+    console.log(this.fireuser)
 
     for(let i = 0; i < allUserKeys.length; i++){
       console.log(allUserKeys[i])
@@ -234,5 +217,57 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.listAllSystemInspections(inspectionType)
     }
     this.changeHeader(inspectionType["key"][0].toUpperCase() + inspectionType["key"].substr(1).toLowerCase())
+  }
+
+  showUsers(){
+    this.users.nativeElement.style.display = "block"
+    this.inspectionsDiv.nativeElement.style.display = "none"
+    let specificUserKey = ""
+    let allUserKeys = Object.keys(this.allUsers)
+    let specificCompanyKey = ""
+
+    for(let i = 0; i < allUserKeys.length; i++){
+      console.log(allUserKeys[i])
+      if(allUserKeys[i] == this.currentUser){
+        specificUserKey=allUserKeys[i]
+        specificCompanyKey=this.allUsers[specificUserKey]["company"]
+        break
+      }
+    }
+
+    if(this.allUsers[specificUserKey]["user_level"] == "admin"){
+      this.listCompanyUsers(this.allCompanies[specificCompanyKey])
+    } else if(this.allUsers[specificUserKey]["user_level"] == "system_admin"){
+      this.listSystemUsers()
+    }
+  }
+
+  listCompanyUsers(company){
+    this.allAppUsers = []
+    console.log(company)
+
+    for(let i = 0; i < Object.values(company["users"]).length; i++){
+      console.log(Object.values(company["users"])[i])
+      let userobj: Object = {}
+      userobj["email"] = Object.values(company["users"])[i]
+      this.allAppUsers[i] = userobj
+    }
+    
+  }
+
+  listSystemUsers(){
+
+  }
+
+  isEmptyObject(obj) {
+    return (obj && (Object.keys(obj).length === 0));
+  }
+
+  async signUserOut(){
+    let oldUser = firebase.auth().currentUser.email
+    await firebase.auth().signOut().then(function(){
+      console.log(oldUser+" has signed out")
+    })
+    this.isSignedIn = false
   }
 } //end whole thing

@@ -10,13 +10,13 @@
     <div class="dataentry">
         <h1>User Log In</h1>
         <form>
-            <span>Username: </span>
+            <span>Email: </span>
             <input type="text" [(ngModel)]="username" name="username"/>
         </form>
         <br />
         <form>
             <span>Password: </span>
-            <input type="text">
+            <input type="password" [(ngModel)]="password" name="password">
         </form>
         <br>
         <a routerLink="/registration" routerLinkActive="active"><button id="register">Register</button></a>
