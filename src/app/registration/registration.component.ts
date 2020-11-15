@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 @Component({
   selector: 'app-registration',
@@ -10,6 +12,7 @@ export class RegistrationComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    //firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword")
   }
 
 }

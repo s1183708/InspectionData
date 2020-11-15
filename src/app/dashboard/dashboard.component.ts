@@ -3,7 +3,6 @@ import { DataService } from '../core/data.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import { isEmptyExpression } from '@angular/compiler';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,8 +50,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // *************************************************** //
     // CURRENT USER HARDCODED FOR TESTING PURPOSES FOR NOW //
-    // zmastorio99@gmail.com PowerOfSparda
+    //  zmastorio99@gmail.com PowerOfSparda
     //  wetdoghair2018@gmail.com password123
+    //  vergil@gmail.com password123
     // *************************************************** //
     this.currentUser = "YCUMJTN8T9SfNfSW6iKqpYZ6GR53" //TESTING, CHANGE BACK LATER
     this.dataservice.getInspections().subscribe((data) => {
