@@ -19,8 +19,9 @@
             <input type="password" [(ngModel)]="password" name="password">
         </form>
         <br>
+        <!-- Change this routing to happen after the firebase login is authenticated -->
         <a routerLink="/registration" routerLinkActive="active"><button id="register">Register</button></a>
-        <a routerLink="/dashboard" routerLinkActive="active" (click)="sendUsername()"><button id="login">Log In</button></a>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="logIn()"><button id="login">Log In</button></a>
     </div>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <nav>
         <ul class="navbar">
             <li (click)="showUsers()" *ngIf="isAdministrator">App Users</li>
-            <li (click)="showstuff()">Inspections</li>
+            <li (click)="toggleInspectionTypes()">Inspections</li>
             <ul id="moreinfo" #moreinfo style="display:none;">
                 <!-- <li (click)="showObs()">Observations</li>
                 <li (click)="showInv()">Investigations</li> -->
@@ -42,12 +42,10 @@
         </div>
         
         <div id="appUsers" #appUsers>
-                <div class="filter">
-                    <label>Filter: </label><input type="text"/>
-                    <a class="newUser"><button>Add New User</button></a>
-                </div>
-                    
-            
+            <div class="filter">
+                <label>Filter: </label><input type="text"/>
+                <a class="newUser"><button (click)="showAddNewUser()">Add New User</button></a>
+            </div>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -57,7 +55,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let users of allAppUsers | keyvalue">
+                    <tr *ngFor="let users of appUsersList | keyvalue">
                         <td> {{users.value.email}} </td>
                         <td> {{users.value.email}} </td>
                         <td> {{users.value.email}} </td>
@@ -100,7 +98,7 @@
             </table>
         </div>
         <div id="addUser" #addUser>
-            <button class="back" >Back</button>
+            <button class="back" (click)="goBackToAppUsers()">Back</button>
             <div id="addUserInfo">
                 <form>
                     <span>Create a username for the new app user: </span> <button type="button" (click)="addUserHelp()">?</button>
@@ -135,49 +133,12 @@
                     <button class="back" (click)="showUsers()">Back</button>
                     <div class="row">
                         <div class="column">
-                   <textarea style="width: 100%;height:75vh; margin-left: 1%;">
-<observationFormGroup>
-    <observationForms>
-        <observationFormInstance userid="KLAS" siteid="214719">
-        <firstSurveyDate>2020-08-12T17:05:54.000-04:00</firstSurveyDate>
-        <secondSurveyDate>2020-08-12T17:05:54.000-04:00</secondSurveyDate>
-        <facilityType>Office Suite-Mall</facilityType>
-        <isOpen>true</isOpen>
-        <hasStaff>false</hasStaff>
-        <hasCustomers>true</hasCustomers>
-        <hasSign>true</hasSign>
-        <hoursOfOperation>7 to 7 </hoursOfOperation>
-        <hasInventory>true</hasInventory>
-        <isOperational>true</isOperational>
-        <additionalComments>Demo to Dave</additionalComments>
-        <executedDate>2020-08-12-04:00</executedDate>
-        </observationFormInstance>
-    </observationForms>
-</observationFormGroup>
-                       </textarea>
-             </div>
-             <div class="column download">
-                   <p>All documents associated with this inspection:</p>
-                   <table>
-                       <thead>
-                           <th>File Size</th>
-                           <th>File Type</th>
-                       </thead>
-                       <tbody>
-                           <tr>
-                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_8E648237-9378-4949-B901-EE8C59909AE1.jpeg" target="_blank">797KB</a></td>
-                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_8E648237-9378-4949-B901-EE8C59909AE1.jpeg" target="_blank">JPEG</a></td>
-                           </tr>
-                           <tr>
-                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_ack-F29FDAF5-A7F8-43C3-94C6-CD746197A43F.pdf" download>172KB</a></td>
-                               <td><a href="https://apps.csse-projects.monmouth.edu/uploads/214721_KLAS_ack-F29FDAF5-A7F8-43C3-94C6-CD746197A43F.pdf" download>PDF</a></td>
-                           </tr>
-                       </tbody>
-                   </table>
-             </div>
-           </div> 
+                        </div>
+                        <div class="column download">
+                        </div>
+                    </div> 
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </body>

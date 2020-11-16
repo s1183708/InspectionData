@@ -1,3 +1,8 @@
+/*
+  TODO: Display text that says "Invalid email/password" when a user fails their login
+        Change it so that the angular routing to the dashboard takes place after the user login is authenticated
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/app'
@@ -19,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   }
 
-  sendUsername(){
+  logIn(){
     firebase.auth().signInWithEmailAndPassword(this.username, this.password).catch(function(error){
       var errorCode = error.code;
       var errorMessage = error.message;

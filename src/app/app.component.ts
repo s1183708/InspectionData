@@ -11,6 +11,7 @@ export class AppComponent implements OnInit{
   title = 'InspectionDataWebPortal';
 
   ngOnInit(){
+    // config object copied from the firebase project itself
     var firebaseConfig = {
       apiKey: "AIzaSyDDWf7iD0em9kPTHGPCyw8yeJubk5vcDpw",
       authDomain: "inspection-data-db247.firebaseapp.com",
