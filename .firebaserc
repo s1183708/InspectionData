@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "inspection-data-db247"
+  },
+  "targets": {
+    "inspection-data-db247": {
+      "hosting": {
+        "InspectionDataWebPortal": [
+          "inspection-data-db247"
+        ]
+      }
+    }
+  }
+}
