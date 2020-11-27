@@ -14,7 +14,6 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 export const addUserStuff = functions.auth.user().onCreate((user)=>{
     const userDetails = {
         email: user.email
-        
     }
     const ref = database().ref('users/'+user.uid)
     return ref.set(userDetails)
