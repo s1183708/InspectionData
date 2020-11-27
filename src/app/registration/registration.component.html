@@ -22,24 +22,24 @@
     <div #AppUserInfo id="AppUserInfo">
         <span>Username: </span><button id="help" (click)="appUserHelp()">?</button><input type="text">
         <br>
-        <span>Password: </span><input type="text">
+        <span>Password: </span><input type="password" [(ngModel)]="userPassword">
         <br>
-        <span>Confirm Password: </span><input type="text">
+        <span>Confirm Password: </span><input type="password">
         <br>
-        <span>Email: </span><input type="text">
+        <span>Email: </span><input type="text" [(ngModel)]="userEmail">
         <br>
-        <a href="index.html"><button>Sign Up</button></a>
+        <button type="button" (click)="createUser()">Sign Up</button>
     </div>
 
     <div #AdministrationInfo id="AdministrationInfo">
         <h2>Account Information</h2>
         <span>Username: </span><input type="text">
         <br>
-        <span>Password: </span><input type="text">
+        <span>Password: </span><input type="password" [(ngModel)]="userPassword">
         <br>
-        <span>Confirm Password: </span><input type="text">
+        <span>Confirm Password: </span><input type="password">
         <br>
-        <span>Email: </span><input type="text">
+        <span>Email: </span><input type="text" [(ngModel)]="userEmail">
         <br>
         <h2>Company Information</h2>
         <span>Company name: </span><input type="text">

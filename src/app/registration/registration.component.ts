@@ -17,22 +17,32 @@ export class RegistrationComponent implements OnInit {
   @ViewChild("usertype") userTypeSelect: ElementRef
   @ViewChild("AppUserInfo") appUserInfoDiv: ElementRef
   @ViewChild("AdministrationInfo") administrationInfoDiv: ElementRef
+  userPassword: string
+  userEmail: string
 
   constructor() { }
 
-  ngOnInit(): void {
-    //firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword")
+  ngOnInit(): void {}
+
+  createUser(){
+    
+    console.log(this.userEmail)
+    console.log(this.userPassword)
+    firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword).catch(function(error) {
+      var errorCode = error.code
+      var errorMessage = error.message
+      console.log(errorCode)
+      console.log(errorMessage)
+    })
   }
-
   
-   checkUser(){
+  checkUser(){
     if(this.userTypeSelect.nativeElement.value=="App User"){
-        this.appUserInfoDiv.nativeElement.style.display = "block"
-        this.administrationInfoDiv.nativeElement.style.display = "none"
-
+      this.appUserInfoDiv.nativeElement.style.display = "block"
+      this.administrationInfoDiv.nativeElement.style.display = "none"
     } else if(this.userTypeSelect.nativeElement.value=="Administrator"){
-        this.appUserInfoDiv.nativeElement.style.display = "none"
-        this.administrationInfoDiv.nativeElement.style.display = "block"
+      this.appUserInfoDiv.nativeElement.style.display = "none"
+      this.administrationInfoDiv.nativeElement.style.display = "block"
     }
   }
   adminHelp(){
