@@ -7,6 +7,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/database'
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-registration',
@@ -18,21 +20,61 @@ export class RegistrationComponent implements OnInit {
   @ViewChild("AppUserInfo") appUserInfoDiv: ElementRef
   @ViewChild("AdministrationInfo") administrationInfoDiv: ElementRef
   userPassword: string
+  userPasswordConfirmation: string
   userEmail: string
+  companyName: string
+  companyEmail: string
+  companyPhoneNumber: string
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {}
 
-  createUser(){
-    
+  createCompanyAdmin(){
     console.log(this.userEmail)
     console.log(this.userPassword)
-    firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword).catch(function(error) {
-      var errorCode = error.code
-      var errorMessage = error.message
-      console.log(errorCode)
-      console.log(errorMessage)
+    //Include checking for correct email and phone number forgot
+    //Check to make sure no fields are left blank before invoking firebase
+
+    if(this.userPassword == this.userPasswordConfirmation){
+      //This method automatically logs the user in after creation
+      firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
+        .catch(function(error) {
+          var errorCode = error.code
+          var errorMessage = error.message
+          console.log(errorCode)
+          console.log(errorMessage)
+        })
+      let userID
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User logged in already or has just logged in.
+          userID = user.uid
+          console.log(user.uid);
+          //Updates the admin user's entry in the user node
+          firebase.database().ref("/users/"+userID).update({
+            company: this.companyName,
+            user_level: "admin"
+          })
+          this.createCompany(userID)
+          firebase.auth().signOut()
+          this.router.navigateByUrl('/login')
+        } else {
+          // User not logged in or has just logged out.
+        }
+        });
+    } else {
+      alert("Passwords didnt match")
+    }
+  }
+
+  createCompany(userID){
+    firebase.database().ref('/companies/'+this.companyName).set({
+      contact_email: this.companyEmail,
+      contact_phone_number: this.companyPhoneNumber,
+      contact_user: userID,
+      name: this.companyName,
+      users: {[userID] : this.userEmail}
     })
   }
   

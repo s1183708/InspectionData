@@ -6,7 +6,7 @@ body{
 }
 
 #AppUserInfo, #AdministrationInfo{
-    display: none;
+    display: block;
     text-align: left;
     margin: 0 auto;
     width: 25%;
@@ -50,4 +50,8 @@ button{
 
 h2 {
     margin: 20px 0 10px 0;
+}
+
+h1 {
+    text-align: center;
 }

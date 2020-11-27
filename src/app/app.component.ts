@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import firebase from 'firebase/app'
+import { FirebaseConfig } from './core/firebaseConfig.service';
 
 @Component({
   selector: 'app-root',
@@ -9,20 +10,10 @@ import firebase from 'firebase/app'
 })
 export class AppComponent implements OnInit{
   title = 'InspectionDataWebPortal';
+  constructor(private firebaseConfig: FirebaseConfig){}
 
   ngOnInit(){
-    // config object copied from the firebase project itself
-    var firebaseConfig = {
-      apiKey: "AIzaSyDDWf7iD0em9kPTHGPCyw8yeJubk5vcDpw",
-      authDomain: "inspection-data-db247.firebaseapp.com",
-      databaseURL: "https://inspection-data-db247.firebaseio.com",
-      projectId: "inspection-data-db247",
-      storageBucket: "inspection-data-db247.appspot.com",
-      messagingSenderId: "884143065485",
-      appId: "1:884143065485:web:184ac987f0bece1ff0d5c4",
-      measurementId: "G-D6C8WJ6PYN"
-    };  
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(this.firebaseConfig.getFirebaseConfig());
   }
 }

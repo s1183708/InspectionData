@@ -9,7 +9,7 @@
         Registration
     </header>
     
-    <div class="registrationChoice">
+    <!-- <div class="registrationChoice">
         <label>What type of User are you?</label>
         <select #usertype id="usertype" (change)="checkUser()">
             <option disabled selected> Select an option</option>
@@ -28,27 +28,27 @@
         <br>
         <span>Email: </span><input type="text" [(ngModel)]="userEmail">
         <br>
-        <button type="button" (click)="createUser()">Sign Up</button>
-    </div>
+        <button type="button" (click)="createCompanyAdmin()">Sign Up</button>
+    </div> -->
+    <h1>Register Your Company</h1>
 
     <div #AdministrationInfo id="AdministrationInfo">
         <h2>Account Information</h2>
-        <span>Username: </span><input type="text">
+        <span>Email: </span><input type="text" [(ngModel)]="userEmail">
         <br>
         <span>Password: </span><input type="password" [(ngModel)]="userPassword">
         <br>
-        <span>Confirm Password: </span><input type="password">
+        <span>Confirm Password: </span><input type="password" [(ngModel)]="userPasswordConfirmation">
         <br>
-        <span>Email: </span><input type="text" [(ngModel)]="userEmail">
-        <br>
+        
         <h2>Company Information</h2>
-        <span>Company name: </span><input type="text">
+        <span>Company name: </span><input type="text" [(ngModel)]="companyName">
         <br>
-        <span>Company contact email: </span><input type="text">
+        <span>Company contact email: </span><input type="text" [(ngModel)]="companyEmail">
         <br>
-        <span>Company contact phone number: </span><input type="text">
+        <span>Company contact phone number: </span><input type="text" [(ngModel)]="companyPhoneNumber">
         <br>
-        <a href="index.html"><button>Sign Up</button></a>
+        <button type="button" (click) = "createCompanyAdmin()">Register</button>
     </div>
 
     <script>
