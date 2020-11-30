@@ -204,6 +204,9 @@ input[type="text"]{
     float: left;
     width: 49%;
   }
+.row {
+    text-align: center;
+}
   
   /* Clear floats after the columns */
 .row:after {

@@ -126,10 +126,13 @@
                 <button class="back" (click)="showInspections(specificInspection['inspection_type'])">Back</button>
                 <div class="row">
                     <div class="column">
-                        <p>{{specificInspection["inspection_data"]}}</p>
-                        <p>{{specificInspection["inspection_datetime"]}}</p>
+                        <h2>Download XML File</h2>
+                        <a href="{{xmlURL}}" target="_blank" download="imgage.jpg">Download</a>
                     </div>
                     <div class="column download">
+                        <h2>Attachments</h2>
+                        <a *ngFor="let attachment of attachmentURLs" target="_blank" href="{{attachment}}">Attachment<br /></a>
+                        
                     </div>
                 </div> 
             </div>

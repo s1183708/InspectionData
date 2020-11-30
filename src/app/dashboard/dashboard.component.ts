@@ -46,6 +46,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   userCompany: string
   specificInspection: Object = {"inspection_data" : "none"}
   xmlData: string = ""
+  xmlURL: string = ""
+  attachmentURLs: string[]
 
   // Variables related to firebase functions
   fireuser: Object
@@ -348,18 +350,52 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.specificInspection = inspection
     this.inspectionContentsDiv.nativeElement.style.display = "block"
+    let count = 0
+    this.attachmentURLs = []
     // this.xmlData = this.dataservice.getInspectionXML(inspection["inspection_data"])
+    let xmlRef = firebase.storage().ref("/companies/companyA/lBItrGZFOyepbuayxOZCM7JGt4y1/20201029180000")
+    // xmlRef.child("inspection.xml").getDownloadURL().then(url =>{
+    //   //this.dataservice.getInspectionXML(url)
+    //   this.xmlURL = url
+    // })
+    xmlRef.listAll().then(res => {
+      res.items.forEach(itemRef => {
+        itemRef.getDownloadURL().then(url =>{
+          this.xmlURL = url
+        })
+      })
+    })
+
+    xmlRef.child("attachments").listAll().then(res => {
+      res.prefixes.forEach(function(folderRef) {
+        // All the prefixes under listRef.
+        // You may call listAll() recursively on them.
+      });
+      res.items.forEach(itemRef => {
+        itemRef.getDownloadURL().then(url => {
+          this.attachmentURLs.push(url)
+          console.log(url)
+        })
+        count = count + 1
+      });
+    }).catch(function(error) {
+      // Uh-oh, an error occurred!
+    })
   }
 
   addNewAppUser(){
     let newAppUser = {}
     //A second firebase instance must be used because creating a user signs the current one out
     let secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
-    secondApp.auth().createUserWithEmailAndPassword("testemail@gmail.com", "123456").then(firebaseUser => {
+    secondApp.auth().createUserWithEmailAndPassword("testemail9@gmail.com", "123456").then(firebaseUser => {
       console.log("This is their UID:" + secondApp.auth().currentUser.uid)
       console.log("This is their email:" + secondApp.auth().currentUser.email)
       firebaseUser.user.updateProfile({
         displayName: "Joseph Joestar"
+      })
+      secondApp.database().ref("/users/"+secondApp.auth().currentUser.uid).update({
+        name: "Joseph Joestar",
+        user_level: "inspector"
       })
     })
   }
