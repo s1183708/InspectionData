@@ -7,7 +7,9 @@ export class DataService {
     
     constructor(private http: HttpClient) { }
 
-    getInspections(){
-        return this.http.get(this.baseUrl+'inspectionapp-d5692-export.json');
+    getInspectionXML(url){
+        return this.http.get(url, {responseType: "text"}).subscribe(value => {
+            console.log(value)
+        });
     }
 }

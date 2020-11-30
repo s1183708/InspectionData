@@ -5,18 +5,21 @@
     <title>Inspection Data Web Portal</title>
 </head>
 <body>
+    <div #loading id="loading">
+        <p>LOADING</p>
+    </div>
     <header>
         <span id="headerText" #headerText>Dashboard</span>
         <a routerLink="/login" routerLinkActive="active"><button id="logOut" (click)="signUserOut()">Log Out</button></a>
     </header>
     <nav>
         <ul class="navbar">
-            <li (click)="showUsers()" *ngIf="isAdministrator">App Users</li>
+            <li (click)="showUsers()" *ngIf="userLevel == 'admin' || userLevel == 'system_admin'">App Users</li>
             <li (click)="toggleInspectionTypes()">Inspections</li>
             <ul id="moreinfo" #moreinfo style="display:none;">
                 <!-- <li (click)="showObs()">Observations</li>
                 <li (click)="showInv()">Investigations</li> -->
-                <li *ngFor="let type of allInspectionTypes | keyvalue" (click)="showInspections(type)">{{ type.key | titlecase }}</li>
+                <li *ngFor="let type of allInspectionTypes | keyvalue" (click)="showInspections(type.value)">{{ type.value | titlecase }}</li>
             </ul>
         </ul>
     </nav>
@@ -25,14 +28,16 @@
             <table>
                 <thead>
                     <th>Date & Time</th>
-                    <th>Inspector</th>
+                    <th *ngIf="userLevel =='admin' || userLevel == 'system_admin'">Inspector</th>
                     <th>Inspection Type</th>
+                    <th *ngIf="userLevel == 'system_admin'">Company</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let inspection of allUserInspections | keyvalue">
-                        <td>{{inspection.value.inspection_date}}</td>
-                        <td>{{inspection.value.inspector}}</td>
+                        <td (click)="getInspectionData(inspection.value)">{{inspection.value.inspection_datetime}}</td>
+                        <td *ngIf="userLevel =='admin' || userLevel == 'system_admin'">{{inspection.value.inspector}}</td>
                         <td>{{inspection.value.inspection_type | titlecase}}</td>
+                        <td *ngIf="userLevel == 'system_admin'">{{inspection.value.company}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -49,9 +54,10 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Username</th>
+                        <th>Email</th>
                         <th>Full Name</th>
-                        <th>Inspections Completed</th>
+                        <th *ngIf="userLevel == 'admin'">Inspections Completed</th>
+                        <th *ngIf="userLevel == 'system_admin'">Company</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,46 +107,31 @@
             <button class="back" (click)="goBackToAppUsers()">Back</button>
             <div id="addUserInfo">
                 <form>
-                    <span>Create a username for the new app user: </span> <!--<button type="button" (click)="addUserHelp()">?</button> -->
+                    <span>User's full name: </span>
+                    <input type="text">
+                    <br>
+                    <span>User's email: </span> <!--<button type="button" (click)="addUserHelp()">?</button> -->
                     <input type="text">
                     <br>
                     <span>Create a default password for the user: </span>
                     <input type="password">
                     <br>
-                    <button type="button" >Submit</button>
+                    <button type="button" (click)="addNewAppUser()">Submit</button>
                 </form>
             </div>
         </div>
-        <div id="inspections">
-            <div id="observations" #observations>
-                <div class="filter">
-                    <label>Filter: </label><input type="text"/>
-                </div>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Date & Time</th>
-                            <th>User</th>
-                            <th>Inspection Type</th>
-                        </tr>
-                    </thead>
-                    <tr *ngFor="let inspection of allUserInspections | keyvalue" class="inspectionlist">
-                        <td>{{inspection.value.inspection_date}}</td>
-                        <td>{{inspection.value.inspector}}</td>
-                        <td>{{inspection.value.inspection_type | titlecase}}</td>
-                    </tr>
-                </table>
-            </div>
-            <div id="observationsInfo" #observationsInfo>
-                <div class="inspectiondata">
-                    <button class="back" (click)="showUsers()">Back</button>
-                    <div class="row">
-                        <div class="column">
-                        </div>
-                        <div class="column download">
-                        </div>
-                    </div> 
-                </div>
+        
+        <div id="inspectionContents" #inspectionContents>
+            <div class="inspectiondata">
+                <button class="back" (click)="showInspections(specificInspection['inspection_type'])">Back</button>
+                <div class="row">
+                    <div class="column">
+                        <p>{{specificInspection["inspection_data"]}}</p>
+                        <p>{{specificInspection["inspection_datetime"]}}</p>
+                    </div>
+                    <div class="column download">
+                    </div>
+                </div> 
             </div>
         </div>
     </div>

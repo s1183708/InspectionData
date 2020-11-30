@@ -13,7 +13,8 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 export const addUserStuff = functions.auth.user().onCreate((user)=>{
     const userDetails = {
-        email: user.email
+        email: user.email,
+        name: user.displayName
     }
     const ref = database().ref('users/'+user.uid)
     return ref.set(userDetails)
