@@ -345,7 +345,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getInspectionData(inspection){
-    alert("AAAAAAAAAAAA")
     console.log(inspection["inspection_data"])
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.specificInspection = inspection
@@ -395,7 +394,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       })
       secondApp.database().ref("/users/"+secondApp.auth().currentUser.uid).update({
         name: "Joseph Joestar",
-        user_level: "inspector"
+        user_level: "inspector",
+        company: firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
+          return snap.val()["company"]
+        })
       })
     })
   }

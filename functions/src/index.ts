@@ -15,7 +15,8 @@ export const addUserStuff = functions.auth.user().onCreate((user)=>{
     const userDetails = {
         email: user.email,
         name: "",
-        user_level: ""
+        user_level: "",
+        company: ""
     }
     const ref = database().ref('users/'+user.uid)
     return ref.set(userDetails)
