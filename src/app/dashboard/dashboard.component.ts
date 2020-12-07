@@ -47,7 +47,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   specificInspection: Object = {"inspection_data" : "none"}
   xmlData: string = ""
   xmlURL: string = ""
-  attachmentURLs: string[]
+  xmlFileName: string = ""
+  attachmentURLs: object[]
+  attachmentFileNames: string[] = []
+  secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
 
   // Variables related to firebase functions
   fireuser: Object
@@ -256,6 +259,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   showUsers(){
     this.appUsersDiv.nativeElement.style.display = "block"
     this.inspectionsDiv.nativeElement.style.display = "none"
+    this.inspectionContentsDiv.nativeElement.style.display = "none"
 
     if(this.userLevel == "admin"){
       this.listCompanyUsers(this.userCompany)
@@ -315,6 +319,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       console.log(oldUser+" has signed out")
     })
     this.isSignedIn = false
+    this.secondApp.delete()
   } //end signUserOut()
   // END - Firebase functions
 
@@ -361,6 +366,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       res.items.forEach(itemRef => {
         itemRef.getDownloadURL().then(url =>{
           this.xmlURL = url
+          let m = itemRef.fullPath.toString().match(/.*\/(.+?\..+)/)
+          if (m && m.length > 1)
+          {
+            this.xmlFileName = m[1]
+          }
+          console.log(this.xmlFileName)
         })
       })
     })
@@ -370,12 +381,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         // All the prefixes under listRef.
         // You may call listAll() recursively on them.
       });
+      let count = 0
       res.items.forEach(itemRef => {
         itemRef.getDownloadURL().then(url => {
+          let userobj = {}
+          userobj["url"] = url
           this.attachmentURLs.push(url)
           console.log(url)
+          let m = itemRef.fullPath.toString().match(/.*\/(.+?\..+)/)
+          if (m && m.length > 1)
+          {
+            userobj["filename"] = m[1]
+            
+          }
+          this.attachmentURLs[count] = userobj
+          count = count + 1
+          console.log(this.attachmentURLs)
         })
-        count = count + 1
       });
     }).catch(function(error) {
       // Uh-oh, an error occurred!
@@ -385,14 +407,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   addNewAppUser(){
     let newAppUser = {}
     //A second firebase instance must be used because creating a user signs the current one out
-    let secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
-    secondApp.auth().createUserWithEmailAndPassword("testemail9@gmail.com", "123456").then(firebaseUser => {
-      console.log("This is their UID:" + secondApp.auth().currentUser.uid)
-      console.log("This is their email:" + secondApp.auth().currentUser.email)
+    // let secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
+    this.secondApp.auth().createUserWithEmailAndPassword("testemail9@gmail.com", "123456").then(firebaseUser => {
+      console.log("This is their UID:" + this.secondApp.auth().currentUser.uid)
+      console.log("This is their email:" + this.secondApp.auth().currentUser.email)
       firebaseUser.user.updateProfile({
         displayName: "Joseph Joestar"
       })
-      secondApp.database().ref("/users/"+secondApp.auth().currentUser.uid).update({
+      this.secondApp.database().ref("/users/"+this.secondApp.auth().currentUser.uid).update({
         name: "Joseph Joestar",
         user_level: "inspector",
         company: firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {

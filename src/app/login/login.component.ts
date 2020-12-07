@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
       var errorMessage = error.message;
       console.log(errorCode + ": " + errorMessage)
     })
+    firebase.auth().currentUser.email = "johnc@gmail.com"
   }
 
 }

@@ -49,7 +49,7 @@
         <div id="appUsers" #appUsers>
             <div class="filter">
                 <label>Filter: </label><input type="text"/>
-                <a class="newUser"><button (click)="showAddNewUser()">Add New User</button></a>
+                <a *ngIf="userLevel == 'admin'" class="newUser"><button (click)="showAddNewUser()">Add New User</button></a>
             </div>
             <table class="table table-hover">
                 <thead>
@@ -127,11 +127,13 @@
                 <div class="row">
                     <div class="column">
                         <h2>Download XML File</h2>
-                        <a href="{{xmlURL}}" target="_blank" download="imgage.jpg">Download</a>
+                        <a href="{{xmlURL}}" target="_blank" download="imgage.jpg">{{xmlFileName}}</a>
                     </div>
                     <div class="column download">
                         <h2>Attachments</h2>
-                        <a *ngFor="let attachment of attachmentURLs" target="_blank" href="{{attachment}}">Attachment<br /></a>
+                        <span *ngFor="let attachment of attachmentURLs | keyvalue">
+                            <a target="_blank" href="{{attachment.value.url}}">{{attachment.value.filename}}</a><br />
+                        </span>
                         
                     </div>
                 </div> 

@@ -39,12 +39,25 @@ export class RegistrationComponent implements OnInit {
     if(this.userPassword == this.userPasswordConfirmation){
       //This method automatically logs the user in after creation
       firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
-        .catch(function(error) {
+        .catch(error => {
           var errorCode = error.code
           var errorMessage = error.message
           console.log(errorCode)
           console.log(errorMessage)
         })
+        // .then(firebaseUser => {
+        //   console.log()
+        //   firebase.database().ref("/users/"+firebase.auth().currentUser.uid).update({
+        //     company: this.companyName,
+        //     name: "person",
+        //     user_level: "admin"
+        //   })
+        //   this.createCompany(firebase.auth().currentUser.uid)
+        //   firebase.auth().signOut().then(() => {
+        //     this.router.navigateByUrl('/login')
+        //   })
+          
+        // })
       let userID
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
