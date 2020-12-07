@@ -16,9 +16,6 @@ import {Router} from '@angular/router'
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-  @ViewChild("usertype") userTypeSelect: ElementRef
-  @ViewChild("AppUserInfo") appUserInfoDiv: ElementRef
-  @ViewChild("AdministrationInfo") administrationInfoDiv: ElementRef
   userPassword: string
   userPasswordConfirmation: string
   userEmail: string
@@ -91,15 +88,6 @@ export class RegistrationComponent implements OnInit {
     })
   }
   
-  checkUser(){
-    if(this.userTypeSelect.nativeElement.value=="App User"){
-      this.appUserInfoDiv.nativeElement.style.display = "block"
-      this.administrationInfoDiv.nativeElement.style.display = "none"
-    } else if(this.userTypeSelect.nativeElement.value=="Administrator"){
-      this.appUserInfoDiv.nativeElement.style.display = "none"
-      this.administrationInfoDiv.nativeElement.style.display = "block"
-    }
-  }
   adminHelp(){
     alert("Only fill this out if you are representing a company")
   }

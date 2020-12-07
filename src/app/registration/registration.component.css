@@ -5,7 +5,7 @@ body{
     font-family: verdana;
 }
 
-#AppUserInfo, #AdministrationInfo{
+#registerDiv{
     display: block;
     text-align: left;
     margin: 0 auto;

@@ -32,27 +32,23 @@
     </div> -->
     <h1>Register Your Company</h1>
 
-    <div #AdministrationInfo id="AdministrationInfo">
+    <div #registerDiv id="registerDiv">
         <h2>Account Information</h2>
-        <span>Email: </span><input type="text" [(ngModel)]="userEmail">
+        <span>Email: </span><input type="text" [(ngModel)]="userEmail" required>
         <br>
-        <span>Password: </span><input type="password" [(ngModel)]="userPassword">
+        <span>Password: </span><input type="password" [(ngModel)]="userPassword" required>
         <br>
-        <span>Confirm Password: </span><input type="password" [(ngModel)]="userPasswordConfirmation">
+        <span>Confirm Password: </span><input type="password" [(ngModel)]="userPasswordConfirmation" required>
         <br>
         
         <h2>Company Information</h2>
-        <span>Company name: </span><input type="text" [(ngModel)]="companyName">
+        <span>Company name: </span><input type="text" [(ngModel)]="companyName" required>
         <br>
-        <span>Company contact email: </span><input type="text" [(ngModel)]="companyEmail">
+        <span>Company contact email: </span><input type="text" [(ngModel)]="companyEmail" required>
         <br>
-        <span>Company contact phone number: </span><input type="text" [(ngModel)]="companyPhoneNumber">
+        <span>Company contact phone number: </span><input type="text" [(ngModel)]="companyPhoneNumber" required>
         <br>
-        <button type="button" (click) = "createCompanyAdmin()">Register</button>
+        <button type="button" (click)="createCompanyAdmin()">Register</button>
     </div>
-
-    <script>
-       
-    </script>
 </body>
 </html>
