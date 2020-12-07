@@ -260,6 +260,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.appUsersDiv.nativeElement.style.display = "block"
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.inspectionContentsDiv.nativeElement.style.display = "none"
+    this.changeHeader("App Users")
 
     if(this.userLevel == "admin"){
       this.listCompanyUsers(this.userCompany)
@@ -343,10 +344,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   showAddNewUser(){
     this.addUserDiv.nativeElement.style.display="block"
     this.appUsersDiv.nativeElement.style.display="none"
+    this.changeHeader("Add New App User")
   }
   goBackToAppUsers(){
     this.addUserDiv.nativeElement.style.display="none"
     this.appUsersDiv.nativeElement.style.display="block"
+    this.changeHeader("App Users")
   }
 
   getInspectionData(inspection){

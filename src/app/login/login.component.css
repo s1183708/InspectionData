@@ -62,3 +62,7 @@ input[type="text"]{
     font-size: 15px;
     font-family: verdana;
 }
+
+#failedLogin {
+    color: red;
+}

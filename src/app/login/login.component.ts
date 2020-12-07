@@ -16,6 +16,7 @@ import 'firebase/auth'
 export class LoginComponent implements OnInit {
   username: string = ""
   password: string = ""
+  failedLogin: boolean = false
   constructor(public router: Router, public route: ActivatedRoute) { 
   }
   
@@ -25,12 +26,15 @@ export class LoginComponent implements OnInit {
   }
 
   logIn(){
-    firebase.auth().signInWithEmailAndPassword(this.username, this.password).catch(function(error){
+    firebase.auth().signInWithEmailAndPassword(this.username, this.password).then(value => {
+      console.log(value.user.uid)
+      this.router.navigateByUrl('/dashboard')
+    }).catch(error => {
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log(errorCode + ": " + errorMessage)
+      this.failedLogin = true
     })
-    firebase.auth().currentUser.email = "johnc@gmail.com"
   }
 
 }

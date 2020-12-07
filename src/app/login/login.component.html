@@ -9,6 +9,7 @@
     </header>
     <div class="dataentry">
         <h1>User Log In</h1>
+        <span *ngIf="failedLogin" id="failedLogin">Incorrect email or password. Please re-enter.</span>
         <form>
             <span>Email: </span>
             <input type="text" [(ngModel)]="username" name="username"/>
@@ -21,7 +22,7 @@
         <br>
         <!-- Change this routing to happen after the firebase login is authenticated -->
         <a routerLink="/registration" routerLinkActive="active"><button id="register">Register</button></a>
-        <a routerLink="/dashboard" routerLinkActive="active" (click)="logIn()"><button id="login">Log In</button></a>
+        <a (click)="logIn()"><button id="login">Log In</button></a>
     </div>
 </body>
 </html>
