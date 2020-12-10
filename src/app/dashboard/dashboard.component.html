@@ -56,15 +56,16 @@
                     <tr>
                         <th>Email</th>
                         <th>Full Name</th>
-                        <th *ngIf="userLevel == 'admin'">Inspections Completed</th>
+                        <th>Authoritzation Level</th>
                         <th *ngIf="userLevel == 'system_admin'">Company</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let users of appUsersList | keyvalue">
                         <td> {{users.value.email}} </td>
-                        <td> {{users.value.email}} </td>
-                        <td> {{users.value.email}} </td>
+                        <td> {{users.value.name}} </td>
+                        <td> {{users.value.user_level}} </td>
+                        <td *ngIf="userLevel == 'system_admin'"> {{users.value.company}} </td>
                     </tr>
                 </tbody>
             </table>
@@ -108,13 +109,13 @@
             <div id="addUserInfo">
                 <form>
                     <span>User's full name: </span>
-                    <input type="text">
+                    <input type="text" #newUserName>
                     <br>
                     <span>User's email: </span> <!--<button type="button" (click)="addUserHelp()">?</button> -->
-                    <input type="text">
+                    <input type="text" #newUserEmail>
                     <br>
                     <span>Create a default password for the user: </span>
-                    <input type="password">
+                    <input type="password" #newUserPassword>
                     <br>
                     <button type="button" (click)="addNewAppUser()">Submit</button>
                 </form>

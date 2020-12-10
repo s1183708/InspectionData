@@ -34,6 +34,7 @@
 
     <div #registerDiv id="registerDiv">
         <h2>Account Information</h2>
+        <span>Full Name: </span><input type="text" [(ngModel)]="userFullName" required>
         <span>Email: </span><input type="text" [(ngModel)]="userEmail" required>
         <br>
         <span>Password: </span><input type="password" [(ngModel)]="userPassword" required>

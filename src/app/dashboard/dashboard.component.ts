@@ -30,6 +30,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild("loading") loadingDiv: ElementRef
   @ViewChild("inspectionContents") inspectionContentsDiv: ElementRef
   @ViewChild("inspectionsList") inspectionsListDiv: ElementRef
+  @ViewChild("newUserName") newUserName: ElementRef
+  @ViewChild("newUserEmail") newUserEmail: ElementRef
+  @ViewChild("newUserPassword") newUserPassword: ElementRef
 
   // Creating global variables
   allCompanies: any
@@ -260,6 +263,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.appUsersDiv.nativeElement.style.display = "block"
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.inspectionContentsDiv.nativeElement.style.display = "none"
+    this.addUserDiv.nativeElement.style.display = "none"
     this.changeHeader("App Users")
 
     if(this.userLevel == "admin"){
@@ -274,13 +278,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // TODO: Update the cloud function on user creation to store the display name in the user node as well for use here
   listCompanyUsers(company){
     this.appUsersList = []
+    // firebase.database().ref("/companies/"+company+"/users/").once("value").then(snap => {
+    //   console.log(snap.val())
+    //   for(let i = 0; i < Object.values(snap.val()).length;i++){
+    //     let userobj = {}
+    //     console.log(Object.values(snap.val())[i])
+    //     userobj["email"] = Object.values(snap.val())[i]
+    //     this.appUsersList[i] = userobj
+    //   }
+    // })
     firebase.database().ref("/companies/"+company+"/users/").once("value").then(snap => {
       console.log(snap.val())
-      for(let i = 0; i < Object.values(snap.val()).length;i++){
+      for(let i = 0; i < Object.keys(snap.val()).length;i++){
         let userobj = {}
-        console.log(Object.values(snap.val())[i])
-        userobj["email"] = Object.values(snap.val())[i]
-        this.appUsersList[i] = userobj
+        console.log(Object.keys(snap.val())[i])
+        firebase.database().ref("/users/"+Object.keys(snap.val())[i]).once("value").then(snapshot => {
+          this.appUsersList[i] = snapshot.val()
+        })
       }
     })
   } //end listCompanyUsers()
@@ -300,9 +314,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           let users = snap.val()[companyKeys[i]]["users"]
           let userKeys = Object.keys(users)
           for(let j = 0; j < userKeys.length; j++){
-            let userobj = {}
-            userobj["email"] = users[userKeys[j]]
-            this.appUsersList[count] = userobj
+            let currentCount = count
+            console.log(userKeys[j])
+            firebase.database().ref("/users/"+userKeys[j]).once("value").then(snapshot => {
+              this.appUsersList[currentCount] = snapshot.val()
+            })
             count = count + 1
           }
         }
@@ -344,6 +360,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   showAddNewUser(){
     this.addUserDiv.nativeElement.style.display="block"
     this.appUsersDiv.nativeElement.style.display="none"
+    this.newUserName.nativeElement.value = ""
+    this.newUserEmail.nativeElement.value = ""
+    this.newUserPassword.nativeElement.value = ""
     this.changeHeader("Add New App User")
   }
   goBackToAppUsers(){
@@ -360,7 +379,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     let count = 0
     this.attachmentURLs = []
     // this.xmlData = this.dataservice.getInspectionXML(inspection["inspection_data"])
-    let xmlRef = firebase.storage().ref("/companies/companyA/lBItrGZFOyepbuayxOZCM7JGt4y1/20201029180000")
+    let xmlRef = firebase.storage().refFromURL(inspection["inspection_data"])
     // xmlRef.child("inspection.xml").getDownloadURL().then(url =>{
     //   //this.dataservice.getInspectionXML(url)
     //   this.xmlURL = url
@@ -408,22 +427,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   addNewAppUser(){
-    let newAppUser = {}
     //A second firebase instance must be used because creating a user signs the current one out
     // let secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
-    this.secondApp.auth().createUserWithEmailAndPassword("testemail9@gmail.com", "123456").then(firebaseUser => {
-      console.log("This is their UID:" + this.secondApp.auth().currentUser.uid)
-      console.log("This is their email:" + this.secondApp.auth().currentUser.email)
-      firebaseUser.user.updateProfile({
-        displayName: "Joseph Joestar"
-      })
-      this.secondApp.database().ref("/users/"+this.secondApp.auth().currentUser.uid).update({
-        name: "Joseph Joestar",
-        user_level: "inspector",
-        company: firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
-          return snap.val()["company"]
+    console.log(this.newUserName.nativeElement.value)
+    console.log(this.newUserEmail.nativeElement.value)
+    console.log(this.newUserPassword.nativeElement.value)
+    let userCompany = ""
+    firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
+      userCompany = snap.val()["company"]
+      this.secondApp.auth().createUserWithEmailAndPassword(this.newUserEmail.nativeElement.value, this.newUserPassword.nativeElement.value).then(firebaseUser => {
+        console.log("This is their UID:" + this.secondApp.auth().currentUser.uid)
+        console.log("This is their email:" + this.secondApp.auth().currentUser.email)
+        this.secondApp.database().ref("/users/"+this.secondApp.auth().currentUser.uid).set({
+          name: this.newUserName.nativeElement.value,
+          user_level: "inspector",
+          company: userCompany,
+          email: this.newUserEmail.nativeElement.value
+        })
+        this.secondApp.database().ref("/companies/"+userCompany+"/users/").update({
+          [this.secondApp.auth().currentUser.uid]: this.secondApp.auth().currentUser.email
         })
       })
     })
+    
+    this.showUsers()
   }
 } //end whole thing

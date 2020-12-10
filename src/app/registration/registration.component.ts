@@ -19,6 +19,7 @@ export class RegistrationComponent implements OnInit {
   userPassword: string
   userPasswordConfirmation: string
   userEmail: string
+  userFullName: string
   companyName: string
   companyEmail: string
   companyPhoneNumber: string
@@ -36,43 +37,23 @@ export class RegistrationComponent implements OnInit {
     if(this.userPassword == this.userPasswordConfirmation){
       //This method automatically logs the user in after creation
       firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
+        .then(value => {
+          firebase.database().ref("/users/"+value.user.uid).set({
+            email: this.userEmail,
+            name: this.userFullName,
+            user_level: "admin",
+            company: this.companyName
+          })
+          this.createCompany(value.user.uid)
+          this.router.navigateByUrl('/login')
+          firebase.auth().signOut()
+        })
         .catch(error => {
           var errorCode = error.code
           var errorMessage = error.message
           console.log(errorCode)
           console.log(errorMessage)
         })
-        // .then(firebaseUser => {
-        //   console.log()
-        //   firebase.database().ref("/users/"+firebase.auth().currentUser.uid).update({
-        //     company: this.companyName,
-        //     name: "person",
-        //     user_level: "admin"
-        //   })
-        //   this.createCompany(firebase.auth().currentUser.uid)
-        //   firebase.auth().signOut().then(() => {
-        //     this.router.navigateByUrl('/login')
-        //   })
-          
-        // })
-      let userID
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          // User logged in already or has just logged in.
-          userID = user.uid
-          console.log(user.uid);
-          //Updates the admin user's entry in the user node
-          firebase.database().ref("/users/"+userID).update({
-            company: this.companyName,
-            user_level: "admin"
-          })
-          this.createCompany(userID)
-          firebase.auth().signOut()
-          this.router.navigateByUrl('/login')
-        } else {
-          // User not logged in or has just logged out.
-        }
-        });
     } else {
       alert("Passwords didnt match")
     }
