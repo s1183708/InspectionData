@@ -85,7 +85,7 @@
                     <input type="text" [(ngModel)] = "newUserName" name="newUserName" required>
                     <span *ngIf="badEmail" class="errorText">Incorrect email format</span>
                     <br>
-                    <span>User's email: </span> <!--<button type="button" (click)="addUserHelp()">?</button> -->
+                    <span>User's email: </span>
                     <input type="text" [(ngModel)] = "newUserEmail" name="newUserEmail" required>
                     <span *ngIf="!passwordsMatch" class="errorText">Passwords do not match</span>
                     <br>

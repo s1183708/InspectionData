@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import { DataService } from '../core/data.service';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +24,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  //Logs user in
   logIn(){
     firebase.auth().signInWithEmailAndPassword(this.username, this.password).then(value => {
       this.router.navigateByUrl('/dashboard')

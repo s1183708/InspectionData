@@ -1,13 +1,4 @@
-/*
-  TODO: Change data being pulled from inspectionapp-d5692-export.json file, which is all test data, to using a firebase database conenction
-          This will require some restructuring or rewriting of the code for showing inspections
-        Change the addNewUser functionality to allow the admin to create an app user account with email/password, then have that user change
-          their password on their first login
-        
-*/
-
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { DataService } from '../core/data.service';
 import { FirebaseConfig } from '../core/firebaseConfig.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import firebase from 'firebase/app'
@@ -19,7 +10,7 @@ import 'firebase/storage'
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
   // Creating reference to HTML elements
   @ViewChild("moreinfo") typesList: ElementRef
   @ViewChild("appUsers") appUsersDiv: ElementRef
@@ -63,7 +54,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   fireuser: Object
   isSignedIn: any = false
 
-  constructor(private dataservice: DataService, public router: Router, public route: ActivatedRoute, private firebaseConfig: FirebaseConfig) {}
+  constructor(public router: Router, public route: ActivatedRoute, private firebaseConfig: FirebaseConfig) {}
 
 
   ngOnInit(): void {
@@ -71,7 +62,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     let userID = ""
     let userLevel = ""
     let userCompany = ""
-    let userInspections = {}
 
     //Checks if the user is signed in thru firebase authentication
     firebase.auth().onAuthStateChanged(user => {
@@ -89,32 +79,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           userCompany = dataSnapshot.val()['company']
           this.userCompany = userCompany
           this.getInspectionTypes(userCompany)
-          let inspectionType = "observation"
-          //this.listAllUserInspections(userID, userCompany, inspectionType)
           this.loadingDiv.nativeElement.style.display = "none"
         })
-        
-        //alert("USER HAS LOGGED IN\n"+"email: " + user.email + "\nUser ID: " + user.uid)
       }
     })
   } //end ngOnInit
-
-  ngAfterViewInit(): void {
-    
-  }
-
-
-
-  // Used when the user clicks on the "Inspections" part of the left nav bar
-  // Expands and retracts depending on its current visibility
-  toggleInspectionTypes(){
-      if(!this.isInspectionTypesVisible){
-        this.typesList.nativeElement.style.display = "block";
-      } else {
-        this.typesList.nativeElement.style.display = "none";
-      }
-      this.isInspectionTypesVisible = !this.isInspectionTypesVisible;
-  }
 
   // START - Functions related to displaying inspection
   // Decides which inspections to show based on user access rights
@@ -323,22 +292,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.secondApp.delete()
   } //end signUserOut()
   // END - Firebase functions
-
-  //MISC Functions
-  //Check if object is empty
-  isEmptyObject(obj) {
-    return (obj && (Object.keys(obj).length === 0));
-  }
-
-  // Alert giving more info about adding users to the system
-  addUserHelp(){
-    alert("Give the user this username. When they register for the web portal they will use this username.");
-  }
-
-  // Change the top left header to the current view's focus
-  changeHeader(words){
-    this.headerText.nativeElement.innerHTML=words;
-  }
+  
 
   //Display changing functions
   showAddNewUser(){
@@ -353,43 +307,44 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.passwordsMatch = true
     this.changeHeader("Add New App User")
   }
+
   goBackToAppUsers(){
     this.addUserDiv.nativeElement.style.display="none"
     this.appUsersDiv.nativeElement.style.display="block"
     this.changeHeader("App Users")
   }
 
+  // Used when the user clicks on the "Inspections" part of the left nav bar
+  // Expands and retracts depending on its current visibility
+  toggleInspectionTypes(){
+    if(!this.isInspectionTypesVisible){
+      this.typesList.nativeElement.style.display = "block";
+    } else {
+      this.typesList.nativeElement.style.display = "none";
+    }
+    this.isInspectionTypesVisible = !this.isInspectionTypesVisible;
+}
+
+  // Gets everything related to a specific inspection (XML file, attachments, filename for hyperlinks)
   getInspectionData(inspection){
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.specificInspection = inspection
     this.inspectionContentsDiv.nativeElement.style.display = "block"
-    let count = 0
     this.xmlURL = ""
     this.attachmentURLs = []
-    // this.xmlData = this.dataservice.getInspectionXML(inspection["inspection_data"])
+
     let xmlRef = firebase.storage().refFromURL(inspection["inspection_data"])
-    // xmlRef.child("inspection.xml").getDownloadURL().then(url =>{
-    //   //this.dataservice.getInspectionXML(url)
-    //   this.xmlURL = url
-    // })
     xmlRef.listAll().then(res => {
       res.items.forEach(itemRef => {
         itemRef.getDownloadURL().then(url =>{
           this.xmlURL = url
           let m = itemRef.fullPath.toString().match(/.*\/(.+?\..+)/)
-          if (m && m.length > 1)
-          {
-            this.xmlFileName = m[1]
-          }
+          if (m && m.length > 1) this.xmlFileName = m[1]
         })
       })
     })
 
     xmlRef.child("attachments").listAll().then(res => {
-      res.prefixes.forEach(function(folderRef) {
-        // All the prefixes under listRef.
-        // You may call listAll() recursively on them.
-      });
       let count = 0
       res.items.forEach(itemRef => {
         itemRef.getDownloadURL().then(url => {
@@ -397,18 +352,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           userobj["url"] = url
           this.attachmentURLs.push(url)
           let m = itemRef.fullPath.toString().match(/.*\/(.+?\..+)/)
-          if (m && m.length > 1)
-          {
-            userobj["filename"] = m[1]
-            
-          }
+          if (m && m.length > 1) userobj["filename"] = m[1]
+
           this.attachmentURLs[count] = userobj
           count = count + 1
         })
       });
-    }).catch(function(error) {
-      // Uh-oh, an error occurred!
-    })
+    }).catch(function(error) {})
   }
 
   addNewAppUser(){
@@ -418,21 +368,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.badEmail = false
     this.passwordsMatch = true
 
-    if(this.newUserEmail === "" || this.newUserPassword === "" || this.newUserPasswordConfirm === "" || this.newUserName === ""){
-      this.fieldsEmpty = true
-    }
-
-    if(!this.emailIsValid(this.newUserEmail)){
-      this.badEmail = true
-    }
-
-    if(this.newUserPassword !== this.newUserPasswordConfirm){
-      this.passwordsMatch = false
-    }
-
-    if(this.fieldsEmpty || this.badEmail || !this.passwordsMatch){
-      return
-    }
+    if(this.newUserEmail === "" || this.newUserPassword === "" || this.newUserPasswordConfirm === "" || this.newUserName === "") this.fieldsEmpty = true
+    if(!this.emailIsValid(this.newUserEmail)) this.badEmail = true
+    if(this.newUserPassword !== this.newUserPasswordConfirm) this.passwordsMatch = false
+    if(this.fieldsEmpty || this.badEmail || !this.passwordsMatch) return
 
     let userCompany = ""
     firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
@@ -454,7 +393,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.showUsers()
   }
 
+  //Utility functions
+  //Check if object is empty
+  isEmptyObject(obj) {
+    return (obj && (Object.keys(obj).length === 0));
+  }
+
+  // Change the top left header to the current view's focus
+  changeHeader(words){
+    this.headerText.nativeElement.innerHTML=words;
+  }
+
+  //Check if email format is valid
   emailIsValid (email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
-} //end whole thing
+} //end dashboard component
