@@ -226,7 +226,8 @@ td > a:visited{
 }
 
 #inspectionContents table{
-    width: 30%;
+    width: 75%;
+    border-top: 5px solid #AAAAAA;
 }
 
 #inspectionContents h2{
@@ -249,4 +250,8 @@ td > a:visited{
 
 .errorText{
     color: red;
+}
+
+.fourColumns {
+    width: 25% !important;
 }

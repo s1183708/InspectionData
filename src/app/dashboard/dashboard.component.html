@@ -34,10 +34,13 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let inspection of allUserInspections | keyvalue">
-                        <td (click)="getInspectionData(inspection.value)">{{inspection.value.inspection_datetime}}</td>
-                        <td *ngIf="userLevel =='admin' || userLevel == 'system_admin'">{{inspection.value.inspector}}</td>
-                        <td>{{inspection.value.inspection_type | titlecase}}</td>
-                        <td *ngIf="userLevel == 'system_admin'">{{inspection.value.company}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel === 'admin'">{{inspection.value.inspection_datetime}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel === 'system_admin'" class="fourColumns">{{inspection.value.inspection_datetime}}</td>
+                        <td *ngIf="userLevel ==='admin'" (click)="getInspectionData(inspection.value)">{{inspection.value.inspector}}</td>
+                        <td *ngIf="userLevel === 'system_admin'" (click)="getInspectionData(inspection.value)" class="fourColumns">{{inspection.value.inspector}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel ==='admin'">{{inspection.value.inspection_type | titlecase}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel ==='system_admin'" class="fourColumns">{{inspection.value.inspection_type | titlecase}}</td>
+                        <td *ngIf="userLevel === 'system_admin'" (click)="getInspectionData(inspection.value)" class="fourColumns">{{inspection.value.company}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -61,10 +64,13 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let users of appUsersList | keyvalue">
-                        <td> {{users.value.email}} </td>
-                        <td> {{users.value.name}} </td>
-                        <td> {{users.value.user_level}} </td>
-                        <td *ngIf="userLevel == 'system_admin'"> {{users.value.company}} </td>
+                        <td *ngIf="userLevel !== 'system_admin'"> {{users.value.email}} </td>
+                        <td *ngIf="userLevel === 'system_admin'" class="fourColumns"> {{users.value.email}} </td>
+                        <td *ngIf="userLevel !== 'system_admin'"> {{users.value.name}} </td>
+                        <td *ngIf="userLevel === 'system_admin'" class="fourColumns"> {{users.value.name}} </td>
+                        <td *ngIf="userLevel !== 'system_admin'"> {{users.value.user_level}} </td>
+                        <td *ngIf="userLevel === 'system_admin'" class="fourColumns"> {{users.value.user_level}} </td>
+                        <td *ngIf="userLevel === 'system_admin'" class="fourColumns"> {{users.value.company}} </td>
                     </tr>
                 </tbody>
             </table>
@@ -99,13 +105,23 @@
                 <div class="row">
                     <div class="column">
                         <h2>Download XML File</h2>
-                        <a href="{{xmlURL}}" target="_blank" download="imgage.jpg">{{xmlFileName}}</a>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><a href="{{xmlURL}}" target="_blank" download="imgage.jpg">{{xmlFileName}}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="column download">
-                        <h2>Attachments</h2>
-                        <span *ngFor="let attachment of attachmentURLs | keyvalue">
-                            <a target="_blank" href="{{attachment.value.url}}">{{attachment.value.filename}}</a><br />
-                        </span>
+                        <h2 *ngIf="attachmentURLs?.length > 0">Attachments</h2>
+                        <table>
+                            <tbody>
+                                <tr *ngFor="let attachment of attachmentURLs | keyvalue">
+                                    <td><a target="_blank" href="{{attachment.value.url}}">{{attachment.value.filename}}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                         
                     </div>
                 </div> 

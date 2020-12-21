@@ -402,6 +402,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.specificInspection = inspection
     this.inspectionContentsDiv.nativeElement.style.display = "block"
     let count = 0
+    this.xmlURL = ""
     this.attachmentURLs = []
     // this.xmlData = this.dataservice.getInspectionXML(inspection["inspection_data"])
     let xmlRef = firebase.storage().refFromURL(inspection["inspection_data"])
