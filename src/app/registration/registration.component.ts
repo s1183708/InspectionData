@@ -23,6 +23,11 @@ export class RegistrationComponent implements OnInit {
   companyName: string
   companyEmail: string
   companyPhoneNumber: string
+  validEmail: boolean = true
+  validCompanyEmail: boolean = true
+  passwordsMatch: boolean = true
+  fieldsEmpty: boolean = false
+  validPhoneNumber: boolean = true
 
   constructor(private router: Router) { }
 
@@ -31,32 +36,54 @@ export class RegistrationComponent implements OnInit {
   createCompanyAdmin(){
     console.log(this.userEmail)
     console.log(this.userPassword)
+    this.validEmail = true
+    this.validCompanyEmail = true
+    this.passwordsMatch = true
+    this.fieldsEmpty = false
+    this.validPhoneNumber = true
+    
     //Include checking for correct email and phone number forgot
     //Check to make sure no fields are left blank before invoking firebase
-
-    if(this.userPassword == this.userPasswordConfirmation){
-      //This method automatically logs the user in after creation
-      firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
-        .then(value => {
-          firebase.database().ref("/users/"+value.user.uid).set({
-            email: this.userEmail,
-            name: this.userFullName,
-            user_level: "admin",
-            company: this.companyName
-          })
-          this.createCompany(value.user.uid)
-          this.router.navigateByUrl('/login')
-          firebase.auth().signOut()
-        })
-        .catch(error => {
-          var errorCode = error.code
-          var errorMessage = error.message
-          console.log(errorCode)
-          console.log(errorMessage)
-        })
-    } else {
-      alert("Passwords didnt match")
+    if(!this.emailIsValid(this.userEmail)){
+      this.validEmail = false
     }
+    if(!this.emailIsValid(this.companyEmail)){
+      this.validCompanyEmail = false
+    }
+    if(this.userPassword !== this.userPasswordConfirmation){
+      this.passwordsMatch = false
+    }
+    if(!this.userFullName || !this.userEmail || !this.userPassword || !this.userPasswordConfirmation || !this.companyName || !this.companyEmail || !this.companyPhoneNumber){
+      this.fieldsEmpty = true
+    }
+    if(!this.phoneNumberIsValid(this.companyPhoneNumber)){
+      this.validPhoneNumber = false
+    }
+
+    if(!this.validEmail || !this.validCompanyEmail || !this.passwordsMatch || this.fieldsEmpty || !this.validPhoneNumber){
+      return
+    }
+
+    //This method automatically logs the user in after creation
+    firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
+      .then(async (value) => {
+        await firebase.database().ref("/users/"+value.user.uid).set({
+          email: this.userEmail,
+          name: this.userFullName,
+          user_level: "admin",
+          company: this.companyName
+        })
+        this.createCompany(value.user.uid)
+        this.router.navigateByUrl('/login')
+        await firebase.auth().signOut()
+      })
+      .catch(error => {
+        var errorCode = error.code
+        var errorMessage = error.message
+        console.log(errorCode)
+        console.log(errorMessage)
+      })
+    
   }
 
   createCompany(userID){
@@ -68,15 +95,12 @@ export class RegistrationComponent implements OnInit {
       users: {[userID] : this.userEmail}
     })
   }
-  
-  adminHelp(){
-    alert("Only fill this out if you are representing a company")
-  }
-  appUserHelp(){
-    alert("A username should have been provided to you already by an administrator. Use that username when registering.")
-  }
-  userChoiceHelp(){
-    alert("App User: You complete inspection data surveys.\nAdministrator: You are setting up an account for a company.")
+
+  emailIsValid (email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
+  phoneNumberIsValid(phone){
+    return /\d{10}/.test(phone)
+  }
 }

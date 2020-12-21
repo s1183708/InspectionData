@@ -36,6 +36,7 @@ label{
 }
 header{
     border-bottom: 5px solid #06657D;
+    font-size: 1.5em;
 }
 
 button{
@@ -54,4 +55,8 @@ h2 {
 
 h1 {
     text-align: center;
+}
+
+.errorText{
+    color: red;
 }

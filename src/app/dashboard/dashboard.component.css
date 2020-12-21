@@ -133,17 +133,18 @@ input {
     font-family: verdana;
 }
 
-.filter{
+.addNewUser{
     text-align: left;
-    margin-left: 4%;
     font-size: 15px;
     font-family: verdana;
     margin-top: 1%;
+    padding-bottom: 1%;
 }
 
 .newUser{
     float: right;
     margin-right: 4%;
+    margin-bottom: 1%;
 }
 
 #logOut{
@@ -244,4 +245,8 @@ td > a:visited{
     background-color: lightblue;
     z-index: 999;
     text-align: center;
+}
+
+.errorText{
+    color: red;
 }

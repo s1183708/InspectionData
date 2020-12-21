@@ -30,9 +30,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild("loading") loadingDiv: ElementRef
   @ViewChild("inspectionContents") inspectionContentsDiv: ElementRef
   @ViewChild("inspectionsList") inspectionsListDiv: ElementRef
-  @ViewChild("newUserName") newUserName: ElementRef
-  @ViewChild("newUserEmail") newUserEmail: ElementRef
-  @ViewChild("newUserPassword") newUserPassword: ElementRef
 
   // Creating global variables
   allCompanies: any
@@ -54,6 +51,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   attachmentURLs: object[]
   attachmentFileNames: string[] = []
   secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
+  fieldsEmpty: boolean = false
+  badEmail: boolean = false
+  passwordsMatch: boolean = true
+  newUserName: string
+  newUserEmail: string
+  newUserPassword: string
+  newUserPasswordConfirm: string
 
   // Variables related to firebase functions
   fireuser: Object
@@ -140,6 +144,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if(userCompanyKey){
     firebase.database().ref("/inspections/"+userCompanyKey).once("value").then(snap => {
       console.log(snap.val())
+      if(snap.val() === null){
+        return
+      }
       let inspectorKeys = Object.keys(snap.val())
       for(let i = 0; i < inspectorKeys.length; i++){
         let inspectionKeys = Object.keys(snap.val()[inspectorKeys[i]])
@@ -159,6 +166,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     } else { //System admin
       firebase.database().ref("/inspections/").once("value").then(snap =>{
         let companyKeys = Object.keys(snap.val())
+        if(snap.val() === null){
+          return
+        }
         for(let i = 0; i < companyKeys.length; i++){
           let inspectors = snap.val()[companyKeys[i]]
           let inspectorKeys = Object.keys(inspectors)
@@ -166,6 +176,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             let inspections = snap.val()[companyKeys[i]][inspectorKeys[j]]
             let inspectionKeys = Object.keys(inspections)
             for(let k = 0; k < inspectionKeys.length; k++){
+              if(!inspections[inspectionKeys[k]]["inspection_type"]){
+                continue
+              }
               console.log(inspections[inspectionKeys[k]]["inspection_type"])
               let inspType = inspections[inspectionKeys[k]]["inspection_type"].toLowerCase()
               if(inspectionTypes.indexOf(inspType) === -1){
@@ -206,7 +219,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   listAllCompanyInspections(userCompanyKey, inspectionType){
     this.allUserInspections = []
     let count = 0
-    firebase.database().ref("/inspections/"+userCompanyKey).once("value").then(snap => {
+    firebase.database().ref("/inspections/"+userCompanyKey).once("value").then(async (snap) => {
       console.log(snap.val())
       let inspectorKeys = Object.keys(snap.val())
       for(let i = 0; i < inspectorKeys.length; i++){
@@ -216,12 +229,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         console.log(inspectionKeys)
         for(let j = 0; j < inspectionKeys.length; j++){
           if(userInspections[inspectionKeys[j]]["inspection_type"].toLowerCase() == inspectionType.toLowerCase()){
-            console.log(userInspections[inspectionKeys[j]])
-            let userobj = userInspections[inspectionKeys[j]]
-            userobj["inspector"] = inspectorKeys[i]
-            console.log(userobj)
-            this.allUserInspections[count] = userobj
-            count = count + 1
+            await firebase.database().ref("/users/"+inspectorKeys[i]).once("value").then(snapshot =>{
+              console.log(userInspections[inspectionKeys[j]])
+              let userobj = userInspections[inspectionKeys[j]]
+              userobj["inspector"] = snapshot.val()["name"]
+              console.log(userobj)
+              this.allUserInspections[count] = userobj
+              count = count + 1
+            })
+            
           }
         }
       }
@@ -232,7 +248,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   listAllSystemInspections(inspectionType){
     let count = 0 
     this.allUserInspections = []
-    firebase.database().ref("/inspections/").once("value").then(snap =>{
+    firebase.database().ref("/inspections/").once("value").then(async (snap) =>{
       let companyKeys = Object.keys(snap.val())
       for(let i = 0; i < companyKeys.length; i++){
         let inspectors = snap.val()[companyKeys[i]]
@@ -241,13 +257,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           let inspections = snap.val()[companyKeys[i]][inspectorKeys[j]]
           let inspectionKeys = Object.keys(inspections)
           for(let k = 0; k < inspectionKeys.length; k++){
+            if(!inspections[inspectionKeys[k]]["inspection_type"]) continue
             let inspType = inspections[inspectionKeys[k]]["inspection_type"].toLowerCase()
             if(inspType == inspectionType.toLowerCase()){
-              let userobj = inspections[inspectionKeys[k]]
-              userobj["inspector"] = inspectorKeys[j]
-              userobj["company"] = companyKeys[i]
-              this.allUserInspections[count] = userobj
-              count = count + 1
+              await firebase.database().ref("/users/"+inspectorKeys[j]).once("value").then(snapshot =>{
+                if(snapshot.val() === null) return
+                let userobj = inspections[inspectionKeys[k]]
+                userobj["inspector"] = snapshot.val()["name"]
+                userobj["company"] = snapshot.val()["company"]
+                this.allUserInspections[count] = userobj
+                count = count + 1
+              })
+              
             }
           }
         }
@@ -360,9 +381,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   showAddNewUser(){
     this.addUserDiv.nativeElement.style.display="block"
     this.appUsersDiv.nativeElement.style.display="none"
-    this.newUserName.nativeElement.value = ""
-    this.newUserEmail.nativeElement.value = ""
-    this.newUserPassword.nativeElement.value = ""
+    this.newUserName = ""
+    this.newUserEmail = ""
+    this.newUserPassword= ""
+    this.newUserPasswordConfirm = ""
+    this.fieldsEmpty = false
+    this.badEmail = false
+    this.passwordsMatch = true
     this.changeHeader("Add New App User")
   }
   goBackToAppUsers(){
@@ -429,27 +454,54 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   addNewAppUser(){
     //A second firebase instance must be used because creating a user signs the current one out
     // let secondApp = firebase.initializeApp(this.firebaseConfig.getFirebaseConfig(), "Secondary")
-    console.log(this.newUserName.nativeElement.value)
-    console.log(this.newUserEmail.nativeElement.value)
-    console.log(this.newUserPassword.nativeElement.value)
+    this.fieldsEmpty = false
+    this.badEmail = false
+    this.passwordsMatch = true
+
+    if(this.newUserEmail === "" || this.newUserPassword === "" || this.newUserPasswordConfirm === "" || this.newUserName === ""){
+      this.fieldsEmpty = true
+    }
+
+    if(!this.emailIsValid(this.newUserEmail)){
+      this.badEmail = true
+    }
+
+    if(this.newUserPassword !== this.newUserPasswordConfirm){
+      this.passwordsMatch = false
+    }
+
+    if(this.fieldsEmpty || this.badEmail || !this.passwordsMatch){
+      return
+    }
+
+    console.log(this.newUserName)
+    console.log(this.newUserEmail)
+    console.log(this.newUserPassword)
     let userCompany = ""
     firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
       userCompany = snap.val()["company"]
-      this.secondApp.auth().createUserWithEmailAndPassword(this.newUserEmail.nativeElement.value, this.newUserPassword.nativeElement.value).then(firebaseUser => {
+      this.secondApp.auth().createUserWithEmailAndPassword(this.newUserEmail, this.newUserPassword).then(firebaseUser => {
         console.log("This is their UID:" + this.secondApp.auth().currentUser.uid)
         console.log("This is their email:" + this.secondApp.auth().currentUser.email)
         this.secondApp.database().ref("/users/"+this.secondApp.auth().currentUser.uid).set({
-          name: this.newUserName.nativeElement.value,
+          name: this.newUserName,
           user_level: "inspector",
           company: userCompany,
-          email: this.newUserEmail.nativeElement.value
+          email: this.newUserEmail
         })
         this.secondApp.database().ref("/companies/"+userCompany+"/users/").update({
           [this.secondApp.auth().currentUser.uid]: this.secondApp.auth().currentUser.email
+        })
+        firebase.auth().sendPasswordResetEmail(this.newUserEmail).then(()=>{
+          console.log("email sent")
         })
       })
     })
     
     this.showUsers()
+  }
+
+  emailIsValid (email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 } //end whole thing

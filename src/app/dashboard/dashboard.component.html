@@ -47,8 +47,7 @@
         </div>
         
         <div id="appUsers" #appUsers>
-            <div class="filter">
-                <label>Filter: </label><input type="text"/>
+            <div class="addNewUser">
                 <a *ngIf="userLevel == 'admin'" class="newUser"><button (click)="showAddNewUser()">Add New User</button></a>
             </div>
             <table class="table table-hover">
@@ -70,58 +69,30 @@
                 </tbody>
             </table>
         </div>
-        <div id="userInfo" #userInfo>
-            <button class="back" >Back</button>
-            <div id="changeableInfo" style="margin: 10px 0 0 10px;">
-                <label>Full Name: </label><input type="text" value="Zakary Mastorio">
-                <br>
-                <label>Username: </label><input type="text" value="ZMASTORIO">
-                <br>
-                <form>
-                    <span>Status: </span>
-                    <input type="radio" name="Status" value="Enabled" checked>
-                    <label for="Enabled">Enabled</label>
-                    <input type="radio" name="Status" value="Disabled">
-                    <label for="Disabled">Disabled</label>
-                </form>
-                <button>Save Changes</button>
-            </div>
-            <p style="margin-left: 10px;">Completed Inspections: </p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date & Time</th>
-                        <th>User</th>
-                        <th>Inspection Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2020-10-15</td>
-                        <td>Investigation</td>
-                        <td>123456</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
         <div id="addUser" #addUser>
             <button class="back" (click)="goBackToAppUsers()">Back</button>
             <div id="addUserInfo">
                 <form>
+                    <span *ngIf="fieldsEmpty" class="errorText">Field(s) empty</span>
+                    <br *ngIf="fieldsEmpty">
                     <span>User's full name: </span>
-                    <input type="text" #newUserName>
+                    <input type="text" [(ngModel)] = "newUserName" name="newUserName" required>
+                    <span *ngIf="badEmail" class="errorText">Incorrect email format</span>
                     <br>
                     <span>User's email: </span> <!--<button type="button" (click)="addUserHelp()">?</button> -->
-                    <input type="text" #newUserEmail>
+                    <input type="text" [(ngModel)] = "newUserEmail" name="newUserEmail" required>
+                    <span *ngIf="!passwordsMatch" class="errorText">Passwords do not match</span>
                     <br>
                     <span>Create a default password for the user: </span>
-                    <input type="password" #newUserPassword>
+                    <input type="password" [(ngModel)] = "newUserPassword" name="newUserPassword" required>
+                    <br>
+                    <span>Confirm password: </span>
+                    <input type="password" [(ngModel)] = "newUserPasswordConfirm" name="newUserPasswordConfirm" required>
                     <br>
                     <button type="button" (click)="addNewAppUser()">Submit</button>
                 </form>
             </div>
         </div>
-        
         <div id="inspectionContents" #inspectionContents>
             <div class="inspectiondata">
                 <button class="back" (click)="showInspections(specificInspection['inspection_type'])">Back</button>

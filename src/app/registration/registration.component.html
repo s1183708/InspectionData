@@ -34,20 +34,30 @@
 
     <div #registerDiv id="registerDiv">
         <h2>Account Information</h2>
-        <span>Full Name: </span><input type="text" [(ngModel)]="userFullName" required>
-        <span>Email: </span><input type="text" [(ngModel)]="userEmail" required>
+        <span *ngIf="fieldsEmpty" class="errorText">Field(s) empty</span>
+        <br *ngIf="fieldsEmpty">
+        <span>Full Name: </span><input type="text" [(ngModel)]="userFullName" name="userFullName">
+        <span *ngIf="!validEmail" class="errorText">Invalid email format</span>
+        <br *ngIf="!validEmail">
+        <span>Email: </span><input type="text" [(ngModel)]="userEmail" name="userEmail">
         <br>
-        <span>Password: </span><input type="password" [(ngModel)]="userPassword" required>
+        <span *ngIf="!passwordsMatch" class="errorText">Passwords do not match</span>
+        <br *ngIf="!passwordsMatch">
+        <span>Password: </span><input type="password" [(ngModel)]="userPassword" name="userPassword">
         <br>
-        <span>Confirm Password: </span><input type="password" [(ngModel)]="userPasswordConfirmation" required>
+        <span>Confirm Password: </span><input type="password" [(ngModel)]="userPasswordConfirmation" name="userPasswordConfirmation">
         <br>
         
         <h2>Company Information</h2>
-        <span>Company name: </span><input type="text" [(ngModel)]="companyName" required>
+        <span>Company name: </span><input type="text" [(ngModel)]="companyName" name="companyName">
         <br>
-        <span>Company contact email: </span><input type="text" [(ngModel)]="companyEmail" required>
+        <span *ngIf="!validCompanyEmail" class="errorText">Invalid email format</span>
+        <br *ngIf="!validCompanyEmail">
+        <span>Company contact email: </span><input type="text" [(ngModel)]="companyEmail" name="companyEmail">
         <br>
-        <span>Company contact phone number: </span><input type="text" [(ngModel)]="companyPhoneNumber" required>
+        <span *ngIf="!validPhoneNumber" class="errorText">Phone number is invalid</span>
+        <br *ngIf="!validPhoneNumber">
+        <span>Company contact phone number: </span><input type="text" [(ngModel)]="companyPhoneNumber" name="companyPhoneNumber">
         <br>
         <button type="button" (click)="createCompanyAdmin()">Register</button>
     </div>
