@@ -34,8 +34,6 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {}
 
   createCompanyAdmin(){
-    console.log(this.userEmail)
-    console.log(this.userPassword)
     this.validEmail = true
     this.validCompanyEmail = true
     this.passwordsMatch = true
@@ -80,8 +78,6 @@ export class RegistrationComponent implements OnInit {
       .catch(error => {
         var errorCode = error.code
         var errorMessage = error.message
-        console.log(errorCode)
-        console.log(errorMessage)
       })
     
   }

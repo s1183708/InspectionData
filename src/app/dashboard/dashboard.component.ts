@@ -76,8 +76,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     //Checks if the user is signed in thru firebase authentication
     firebase.auth().onAuthStateChanged(user => {
       if(!this.isSignedIn && user){
-        console.log("logged in")
-        console.log(user.uid)
         this.fireuser = user
         this.isSignedIn = true
         userID = user.uid
@@ -85,13 +83,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         firebase.database().ref("/users/"+userID).once("value").then(dataSnapshot => {
           userLevel = dataSnapshot.val()['user_level']
           this.userLevel = userLevel
-          console.log(userLevel)
           if(userLevel == "admin"){
             this.isAdministrator = true
           }
           userCompany = dataSnapshot.val()['company']
           this.userCompany = userCompany
-          console.log(userCompany)
           this.getInspectionTypes(userCompany)
           let inspectionType = "observation"
           //this.listAllUserInspections(userID, userCompany, inspectionType)
@@ -123,7 +119,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // START - Functions related to displaying inspection
   // Decides which inspections to show based on user access rights
   showInspections(inspectionType){
-    console.log(inspectionType)
     this.inspectionsDiv.nativeElement.style.display = "block"
     this.appUsersDiv.nativeElement.style.display = "none"
     this.addUserDiv.nativeElement.style.display = "none"
@@ -143,7 +138,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     let inspectionTypes = []
     if(userCompanyKey){
     firebase.database().ref("/inspections/"+userCompanyKey).once("value").then(snap => {
-      console.log(snap.val())
       if(snap.val() === null){
         return
       }
@@ -151,10 +145,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       for(let i = 0; i < inspectorKeys.length; i++){
         let inspectionKeys = Object.keys(snap.val()[inspectorKeys[i]])
         let userInspections = snap.val()[inspectorKeys[i]]
-        console.log(userInspections)
-        console.log(inspectionKeys)
         for(let j = 0; j < inspectionKeys.length; j++){
-          console.log(userInspections[inspectionKeys[j]]["inspection_type"])
           let inspType = userInspections[inspectionKeys[j]]["inspection_type"].toLowerCase()
           if(inspectionTypes.indexOf(inspType) === -1){
             inspectionTypes.push(inspType)
@@ -179,7 +170,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
               if(!inspections[inspectionKeys[k]]["inspection_type"]){
                 continue
               }
-              console.log(inspections[inspectionKeys[k]]["inspection_type"])
               let inspType = inspections[inspectionKeys[k]]["inspection_type"].toLowerCase()
               if(inspectionTypes.indexOf(inspType) === -1){
                 inspectionTypes.push(inspType)
@@ -196,9 +186,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Inspector users will only see their own inspections
   listAllUserInspections(userID, userCompanyKey, inspectionType){
     this.allUserInspections = []
-    console.log(inspectionType)
     firebase.database().ref("/inspections/"+userCompanyKey+"/"+userID).once("value").then(snapshot => {
-      console.log(snapshot.val())
       let count = 0
       let inspectionKeys = Object.keys(snapshot.val())
       for(let i =0; i < inspectionKeys.length;i++){
@@ -207,12 +195,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           userobj["inspector"] = "test"
           this.allUserInspections[count] = userobj
           count = count + 1
-          console.log(userobj["inspection_data"])
         }
       }
     })
     let storef = firebase.storage().ref("/companies/companyA/lBItrGZFOyepbuayxOZCM7JGt4y1/20201029180000/inspection.xml")
-    console.log(storef)
   } //end listAllUserInspections()
 
   // Company Admin users will see all inspections completed by Inspector App Users for their company
@@ -220,20 +206,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.allUserInspections = []
     let count = 0
     firebase.database().ref("/inspections/"+userCompanyKey).once("value").then(async (snap) => {
-      console.log(snap.val())
       let inspectorKeys = Object.keys(snap.val())
       for(let i = 0; i < inspectorKeys.length; i++){
         let inspectionKeys = Object.keys(snap.val()[inspectorKeys[i]])
         let userInspections = snap.val()[inspectorKeys[i]]
-        console.log(userInspections)
-        console.log(inspectionKeys)
         for(let j = 0; j < inspectionKeys.length; j++){
           if(userInspections[inspectionKeys[j]]["inspection_type"].toLowerCase() == inspectionType.toLowerCase()){
             await firebase.database().ref("/users/"+inspectorKeys[i]).once("value").then(snapshot =>{
-              console.log(userInspections[inspectionKeys[j]])
               let userobj = userInspections[inspectionKeys[j]]
               userobj["inspector"] = snapshot.val()["name"]
-              console.log(userobj)
               this.allUserInspections[count] = userobj
               count = count + 1
             })
@@ -298,21 +279,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Used for company admin view
   // TODO: Update the cloud function on user creation to store the display name in the user node as well for use here
   listCompanyUsers(company){
-    this.appUsersList = []
-    // firebase.database().ref("/companies/"+company+"/users/").once("value").then(snap => {
-    //   console.log(snap.val())
-    //   for(let i = 0; i < Object.values(snap.val()).length;i++){
-    //     let userobj = {}
-    //     console.log(Object.values(snap.val())[i])
-    //     userobj["email"] = Object.values(snap.val())[i]
-    //     this.appUsersList[i] = userobj
-    //   }
-    // })
     firebase.database().ref("/companies/"+company+"/users/").once("value").then(snap => {
-      console.log(snap.val())
       for(let i = 0; i < Object.keys(snap.val()).length;i++){
-        let userobj = {}
-        console.log(Object.keys(snap.val())[i])
         firebase.database().ref("/users/"+Object.keys(snap.val())[i]).once("value").then(snapshot => {
           this.appUsersList[i] = snapshot.val()
         })
@@ -327,16 +295,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     let count = 0
 
     firebase.database().ref("/companies/").once("value").then(snap=>{
-      console.log(snap.val())
       let companyKeys = Object.keys(snap.val())
       for(let i = 0; i < companyKeys.length; i++){
-        console.log(snap.val()[companyKeys[i]])
         if(snap.val()[companyKeys[i]].hasOwnProperty("users")){
           let users = snap.val()[companyKeys[i]]["users"]
           let userKeys = Object.keys(users)
           for(let j = 0; j < userKeys.length; j++){
             let currentCount = count
-            console.log(userKeys[j])
             firebase.database().ref("/users/"+userKeys[j]).once("value").then(snapshot => {
               this.appUsersList[currentCount] = snapshot.val()
             })
@@ -353,9 +318,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Signs user out via firebase authentication
   async signUserOut(){
     let oldUser = firebase.auth().currentUser.email
-    await firebase.auth().signOut().then(function(){
-      console.log(oldUser+" has signed out")
-    })
+    await firebase.auth().signOut()
     this.isSignedIn = false
     this.secondApp.delete()
   } //end signUserOut()
@@ -397,7 +360,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getInspectionData(inspection){
-    console.log(inspection["inspection_data"])
     this.inspectionsDiv.nativeElement.style.display = "none"
     this.specificInspection = inspection
     this.inspectionContentsDiv.nativeElement.style.display = "block"
@@ -419,7 +381,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             this.xmlFileName = m[1]
           }
-          console.log(this.xmlFileName)
         })
       })
     })
@@ -435,7 +396,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           let userobj = {}
           userobj["url"] = url
           this.attachmentURLs.push(url)
-          console.log(url)
           let m = itemRef.fullPath.toString().match(/.*\/(.+?\..+)/)
           if (m && m.length > 1)
           {
@@ -444,7 +404,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           }
           this.attachmentURLs[count] = userobj
           count = count + 1
-          console.log(this.attachmentURLs)
         })
       });
     }).catch(function(error) {
@@ -475,15 +434,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       return
     }
 
-    console.log(this.newUserName)
-    console.log(this.newUserEmail)
-    console.log(this.newUserPassword)
     let userCompany = ""
     firebase.database().ref("/users/"+firebase.auth().currentUser.uid).once("value").then(snap => {
       userCompany = snap.val()["company"]
       this.secondApp.auth().createUserWithEmailAndPassword(this.newUserEmail, this.newUserPassword).then(firebaseUser => {
-        console.log("This is their UID:" + this.secondApp.auth().currentUser.uid)
-        console.log("This is their email:" + this.secondApp.auth().currentUser.email)
         this.secondApp.database().ref("/users/"+this.secondApp.auth().currentUser.uid).set({
           name: this.newUserName,
           user_level: "inspector",
@@ -493,9 +447,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.secondApp.database().ref("/companies/"+userCompany+"/users/").update({
           [this.secondApp.auth().currentUser.uid]: this.secondApp.auth().currentUser.email
         })
-        firebase.auth().sendPasswordResetEmail(this.newUserEmail).then(()=>{
-          console.log("email sent")
-        })
+        firebase.auth().sendPasswordResetEmail(this.newUserEmail)
       })
     })
     

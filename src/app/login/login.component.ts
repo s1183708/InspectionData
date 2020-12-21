@@ -27,12 +27,10 @@ export class LoginComponent implements OnInit {
 
   logIn(){
     firebase.auth().signInWithEmailAndPassword(this.username, this.password).then(value => {
-      console.log(value.user.uid)
       this.router.navigateByUrl('/dashboard')
     }).catch(error => {
       var errorCode = error.code;
       var errorMessage = error.message;
-      console.log(errorCode + ": " + errorMessage)
       this.failedLogin = true
     })
   }
