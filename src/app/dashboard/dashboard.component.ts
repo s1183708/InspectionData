@@ -248,6 +248,7 @@ export class DashboardComponent implements OnInit {
   // Used for company admin view
   // TODO: Update the cloud function on user creation to store the display name in the user node as well for use here
   listCompanyUsers(company){
+    this.appUsersList = []
     firebase.database().ref("/companies/"+company+"/users/").once("value").then(snap => {
       for(let i = 0; i < Object.keys(snap.val()).length;i++){
         firebase.database().ref("/users/"+Object.keys(snap.val())[i]).once("value").then(snapshot => {
