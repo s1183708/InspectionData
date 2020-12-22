@@ -4,7 +4,9 @@ import * as admin from 'firebase-admin'
 admin.initializeApp()
 
 export const storageToDatabase = functions.storage.object().onFinalize(async (object) =>{
+    const storagePrefix="gs://inspection-data-db247.appspot.com/companies/"
     let today = new Date
+
     if(object.contentType === "text/xml"){
         let pathComponents = object.name?.split("/")
         let timeSuffix = "AM"
@@ -41,7 +43,7 @@ export const storageToDatabase = functions.storage.object().onFinalize(async (ob
             seconds = "0"+seconds
         }
         await admin.database().ref("/inspections/"+pathComponents![1]+"/"+pathComponents![2]+"/"+pathComponents![3]).update({
-            inspection_data: "gs://inspection-data-db247.appspot.com/companies/"+pathComponents![1]+"/"+pathComponents![2]+"/"+pathComponents![3],
+            inspection_data: storagePrefix +pathComponents![1]+"/"+pathComponents![2]+"/"+pathComponents![3],
             inspection_datetime: (today.getMonth()+1)+"/"+currentDay+"/"+today.getFullYear()+" "+hours+":"+minutes+":"+seconds+" "+timeSuffix
         })
     }

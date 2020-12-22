@@ -168,7 +168,6 @@ export class DashboardComponent implements OnInit {
         }
       }
     })
-    let storef = firebase.storage().ref("/companies/companyA/lBItrGZFOyepbuayxOZCM7JGt4y1/20201029180000/inspection.xml")
   } //end listAllUserInspections()
 
   // Company Admin users will see all inspections completed by Inspector App Users for their company
