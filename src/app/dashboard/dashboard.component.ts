@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
   fieldsEmpty: boolean = false
   badEmail: boolean = false
   passwordsMatch: boolean = true
+  uniqueEmail: boolean = true
   newUserName: string
   newUserEmail: string
   newUserPassword: string
@@ -368,6 +369,7 @@ export class DashboardComponent implements OnInit {
     this.fieldsEmpty = false
     this.badEmail = false
     this.passwordsMatch = true
+    this.uniqueEmail = true
 
     if(this.newUserEmail === "" || this.newUserPassword === "" || this.newUserPasswordConfirm === "" || this.newUserName === "") this.fieldsEmpty = true
     if(!this.emailIsValid(this.newUserEmail)) this.badEmail = true
@@ -388,10 +390,12 @@ export class DashboardComponent implements OnInit {
           [this.secondApp.auth().currentUser.uid]: this.secondApp.auth().currentUser.email
         })
         firebase.auth().sendPasswordResetEmail(this.newUserEmail)
+        this.showUsers()
+      }).catch(err => {
+        this.uniqueEmail = false
+        return
       })
     })
-    
-    this.showUsers()
   }
 
   //Utility functions

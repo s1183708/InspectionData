@@ -34,11 +34,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let inspection of allUserInspections | keyvalue">
-                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel === 'admin'">{{inspection.value.inspection_datetime}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel !== 'system_admin'">{{inspection.value.inspection_datetime}}</td>
                         <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel === 'system_admin'" class="fourColumns">{{inspection.value.inspection_datetime}}</td>
                         <td *ngIf="userLevel ==='admin'" (click)="getInspectionData(inspection.value)">{{inspection.value.inspector}}</td>
                         <td *ngIf="userLevel === 'system_admin'" (click)="getInspectionData(inspection.value)" class="fourColumns">{{inspection.value.inspector}}</td>
-                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel ==='admin'">{{inspection.value.inspection_type | titlecase}}</td>
+                        <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel !=='system_admin'">{{inspection.value.inspection_type | titlecase}}</td>
                         <td (click)="getInspectionData(inspection.value)" *ngIf="userLevel ==='system_admin'" class="fourColumns">{{inspection.value.inspection_type | titlecase}}</td>
                         <td *ngIf="userLevel === 'system_admin'" (click)="getInspectionData(inspection.value)" class="fourColumns">{{inspection.value.company}}</td>
                     </tr>
@@ -84,6 +84,7 @@
                     <span>User's full name: </span>
                     <input type="text" [(ngModel)] = "newUserName" name="newUserName" required>
                     <span *ngIf="badEmail" class="errorText">Incorrect email format</span>
+                    <span *ngIf="!uniqueEmail" class="errorText">Not a unique email. Please alter it</span>
                     <br>
                     <span>User's email: </span>
                     <input type="text" [(ngModel)] = "newUserEmail" name="newUserEmail" required>
